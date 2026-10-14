@@ -960,7 +960,7 @@
   /* --- live content from Supabase (optional): events deck, photo slots, gallery, forms ---
      If config.js is empty or the request fails, the baked-in content above is what shows. */
   var CFG=window.KC_CONFIG||{},DB=!!(CFG.SUPABASE_URL&&CFG.SUPABASE_ANON_KEY);
-  function dbHeaders(extra){var h={'apikey':CFG.SUPABASE_ANON_KEY,'Authorization':'Bearer '+CFG.SUPABASE_ANON_KEY};if(extra)for(var k in extra)h[k]=extra[k];return h;}
+  function dbHeaders(extra){var h={'apikey':CFG.SUPABASE_ANON_KEY};if(extra)for(var k in extra)h[k]=extra[k];return h;}
   function dbGet(path){return fetch(CFG.SUPABASE_URL+'/rest/v1/'+path,{headers:dbHeaders()}).then(function(r){if(!r.ok)throw new Error(r.status);return r.json();});}
   function dbInsert(table,rec){return fetch(CFG.SUPABASE_URL+'/rest/v1/'+table,{method:'POST',headers:dbHeaders({'Content-Type':'application/json','Prefer':'return=minimal'}),body:JSON.stringify(rec)}).then(function(r){if(!r.ok)throw new Error(r.status);});}
   function absUrl(u){return u&&u.charAt(0)==='/'?u.slice(1):u;}

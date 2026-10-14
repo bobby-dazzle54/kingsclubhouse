@@ -43,12 +43,12 @@ Backend: **Supabase** (free tier). `staff/index.html` is a single-file admin (lo
 
 | File | What it is |
 |---|---|
-| `config.js` | Project URL + **anon** key (public by design). Never the service_role key. |
+| `config.js` | Project URL + **publishable** key (public by design). Never a secret / service_role key. |
 | `supabase/schema.sql` | Tables, row-level security, storage bucket, seed data. Paste into the Supabase SQL editor once; safe to re-run. |
 | `supabase/n8n-alerts-workflow.json` | Import into n8n for the "new enquiry / sign-up" email. |
 
 **Setting it up (once)**
-1. Supabase → New project (London, free). Project Settings → API → copy **Project URL** and **anon public** key into `config.js`, push.
+1. Supabase → New project (London, free). Project Settings → API Keys → copy the **Project URL** and the **publishable** key (`sb_publishable_…`) into `config.js`, push.
 2. SQL Editor → paste `supabase/schema.sql` → Run.
 3. Authentication → Providers → Email: turn **off** "Allow new users to sign up" (only staff you add can log in). Authentication → URL configuration → Site URL `https://kingsclubhouse.co.uk`, add redirect `https://kingsclubhouse.co.uk/staff/`.
 4. Authentication → Users → **Add user** for each staff member (email + password). They can reset it from the login page.
