@@ -537,6 +537,117 @@
     .find{padding:22px;}
     .evm-cta{flex-direction:column;}
   }
+
+  /* ---------- mobile-first pass (Oct 2026): to the point, photos first ---------- */
+  /* read-more clamp (applied by JS on phones only) */
+  .clamp{display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden;}
+  .clamp.open{display:block;-webkit-line-clamp:unset;}
+  .morebtn{background:none;border:0;padding:6px 0;margin:6px auto 0;font:inherit;font-weight:700;font-size:13.5px;color:var(--sage2);cursor:pointer;display:block;text-decoration:underline;text-underline-offset:3px;}
+  .sechead .morebtn{margin-top:4px;}
+  /* enquiry form: optional details */
+  .enq details.more{grid-column:1/-1;border:1px dashed var(--line);border-radius:16px;padding:0 16px;background:rgba(255,255,255,.4);}
+  .enq details.more summary{list-style:none;cursor:pointer;padding:14px 0;font-weight:700;font-size:14px;color:var(--sage2);display:flex;justify-content:space-between;align-items:center;gap:10px;white-space:nowrap;}
+  .enq details.more summary::-webkit-details-marker{display:none;}
+  .enq details.more summary span{font-weight:500;font-size:12.5px;color:var(--grey);margin-left:auto;}
+  .enq details.more summary::after{content:"+";font-family:'DM Serif Display',serif;font-size:24px;line-height:1;color:var(--blush);flex:0 0 auto;transition:transform .25s cubic-bezier(.2,.7,.2,1);}
+  .enq details.more[open] summary::after{transform:rotate(45deg);}
+  .enq .moregrid{display:grid;grid-template-columns:1fr 1fr;gap:14px 16px;padding:2px 0 18px;}
+  /* gallery + lightbox (gallery shows on phones; lightbox works everywhere) */
+  .gallery{display:none;}
+  .gallery-hint{display:none;}
+  .lb{position:fixed;inset:0;z-index:96;background:rgba(44,51,39,.96);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);display:none;align-items:center;justify-content:center;padding:56px 12px calc(64px + env(safe-area-inset-bottom));}
+  .lb.open{display:flex;}
+  .lb img{max-width:100%;max-height:100%;object-fit:contain;border-radius:14px;box-shadow:0 30px 80px rgba(0,0,0,.5);user-select:none;}
+  .lb-x{position:absolute;top:12px;right:12px;width:42px;height:42px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;font-size:16px;font-weight:700;cursor:pointer;z-index:2;}
+  .lb-n{position:absolute;top:22px;left:18px;color:#fff;font-size:12.5px;font-weight:700;letter-spacing:1px;opacity:.85;}
+  .lb-cap{position:absolute;left:0;right:0;bottom:calc(20px + env(safe-area-inset-bottom));text-align:center;color:#fff;font-size:13.5px;padding:0 26px;text-shadow:0 1px 10px rgba(0,0,0,.5);}
+  .lb-nav{position:absolute;top:50%;transform:translateY(-50%);width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(255,255,255,.12);color:#fff;font-size:28px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center;padding-bottom:4px;}
+  .lb-prev{left:14px;} .lb-next{right:14px;}
+  .lb-nav:hover,.lb-x:hover{background:rgba(255,255,255,.24);}
+  /* FAQ: show-all control (phones only) */
+  .faqmore{display:none;}
+  .evm-meta.rows{flex-direction:column;gap:5px;}
+  .evm-meta.rows:empty{display:none;}
+  .evm-meta.rows span{font-weight:500;color:var(--ink);}
+  .evm-meta.rows span b{font-weight:700;color:var(--sage2);}
+  @media(max-width:760px){
+    /* rhythm */
+    section{padding:52px 0;}
+    .whatson{padding:46px 0 54px;}
+    .welcome{padding:50px 0 32px;}
+    .sechead{margin-bottom:24px;}
+    h2{font-size:clamp(28px,7.6vw,34px);line-height:1.1;}
+    .lead{font-size:15.5px;}
+    /* hero: never taller than the content, never overflowing */
+    .vhero{height:auto;min-height:calc(100svh - 70px);padding:72px 0 76px;}
+    .vhero .vinner{width:100%;min-width:0;}
+    .vhero .eyebrow{font-size:10px;letter-spacing:3px;margin-bottom:14px;}
+    .vhero h1{font-size:clamp(40px,11.5vw,52px);}
+    .vhero .vlead{font-size:15.5px;max-width:34ch;}
+    .vhero .herostats{display:flex;flex-wrap:nowrap;justify-content:flex-start;gap:8px;overflow-x:auto;scrollbar-width:none;margin:20px -26px 26px;padding:2px 26px;max-width:none;-webkit-overflow-scrolling:touch;}
+    .vhero .herostats::-webkit-scrollbar{display:none;}
+    .vhero .herostats span{flex:0 0 auto;white-space:nowrap;padding:8px 14px;border-radius:100px;border:1px solid rgba(255,255,255,.4);background:rgba(44,51,39,.28);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);font-size:12.5px;text-shadow:none;}
+    .vhero .herostats span+span::before{content:none;}
+    .vhero .herostats b{font-size:15px;margin-right:4px;}
+    .scrollcue{display:none;}
+    /* events deck: peek the next card */
+    .ev{flex-basis:78%;}
+    .deck-hint .h-desktop{display:none;}.deck-hint .h-touch{display:inline;}
+    .ev h3{font-size:21px;}
+    .ev .evbtns .btn{padding:12px 10px;}
+    /* welcome: gallery grid instead of the slider; highlight cards become compact rows */
+    .slider{display:none;}
+    .gallery{display:grid;grid-template-columns:repeat(3,1fr);gap:7px;margin-top:22px;}
+    .gallery button{display:block;width:100%;padding:0;border:0;background:var(--mint);border-radius:12px;overflow:hidden;aspect-ratio:1/1;cursor:pointer;-webkit-tap-highlight-color:transparent;}
+    .gallery button:first-child,.gallery button:last-child{grid-column:1/-1;aspect-ratio:16/9;border-radius:18px;}
+    .gallery img{width:100%;height:100%;object-fit:cover;display:block;}
+    .gallery-hint{display:block;text-align:center;font-size:12px;color:var(--grey);margin-top:8px;}
+    .hl{display:grid;grid-template-columns:1fr;gap:10px;margin:26px 0 0;padding:0;overflow:visible;}
+    .hl .room{flex:none;max-width:none;flex-direction:row;align-items:stretch;border-radius:18px;}
+    .hl .room .ph{flex:0 0 96px;height:auto;min-height:96px;}
+    .hl .room .body{padding:12px 14px;justify-content:center;}
+    .hl .room h3{font-size:18px;}
+    .hl .room p{font-size:13px;margin-top:3px;}
+    .trust{gap:8px;padding-top:24px;font-size:12.5px;}
+    .trust span{background:rgba(255,255,255,.6);border:1px solid var(--line);border-radius:100px;padding:7px 12px;}
+    .trust span::before{margin-right:6px;}
+    /* reviews placeholder: hidden on phones until live reviews are connected */
+    .greviews{display:none;}
+    /* spaces: six photo tiles, tap for the full details */
+    .rooms.sp{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0;padding:0;overflow:visible;}
+    .sp .room{flex:none;max-width:none;border-radius:18px;cursor:pointer;}
+    .sp .room:hover{transform:none;}
+    .sp .room .ph{height:118px;}
+    .sp .room .ph small{top:8px;left:8px;padding:4px 9px;font-size:10px;}
+    .sp .room .body{padding:11px 12px 12px;}
+    .sp .room h3{font-size:16.5px;line-height:1.15;}
+    .sp .room ul{margin:6px 0 0;}
+    .sp .room li{padding:0;border:0;font-size:11px;color:var(--grey);}
+    .sp .room li b{display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;font-size:12.5px;line-height:1.35;}
+    .sp .room li:nth-child(2),.sp .room p,.sp .room .btn,.sp .room .avail{display:none;}
+    .sp .room .body::after{content:"Details →";font-size:11.5px;font-weight:700;color:var(--sage2);margin-top:8px;}
+    /* pricing + how it works */
+    .pricing{gap:22px;margin-bottom:22px;}
+    .offer li{padding:11px 0;font-size:14px;}
+    .pph{border-width:5px;border-radius:20px;}
+    .how{padding:36px 22px;border-radius:24px;}
+    .hsteps{grid-template-columns:1fr 1fr;gap:18px 16px;margin-top:24px;}
+    .hs .n{font-size:26px;margin-bottom:4px;}
+    .how .hs p{font-size:14px;}
+    /* enquiry form */
+    .enq .fsub{margin-bottom:16px;}
+    .enq .moregrid{grid-template-columns:1fr;}
+    .enq details.more{padding:0 14px;}
+    .enq .ffoot small{text-align:center;width:100%;}
+    .community{padding:16px 0 44px;}
+    /* FAQ: first seven, then "show all" */
+    .faq:not(.all) details:nth-of-type(n+8){display:none;}
+    .faqmore{display:block;width:100%;margin-top:14px;padding:14px;border-radius:100px;border:1px solid var(--line);background:rgba(255,255,255,.7);font:inherit;font-weight:700;font-size:14px;color:var(--sage2);cursor:pointer;}
+    .faq summary{font-size:15px;padding:14px 36px 14px 0;}
+    .faqwrap{gap:26px;}
+    .cta h2{font-size:28px;}
+    footer{font-size:12px;}
+  }
 </style>
 </head>
 <body>
@@ -584,7 +695,7 @@
     <div class="eyebrow">Motspur Park · five minutes' walk from the station</div>
     <!-- Alternative headline from the brief: "Big pitches, a proper bar and a braai. Bring the people." -->
     <h1>Your party.<br><em>Our clubhouse.</em></h1>
-    <p class="vlead">King's Clubhouse is a bar, balcony and open grounds in Motspur Park. Hire the clubhouse, bar, balcony, outdoor kitchen and grounds for kids' parties, birthdays, BBQs and community events.</p>
+    <p class="vlead">A bar, balcony, outdoor kitchen and open grounds in Motspur Park — for kids' parties, birthdays, BBQs and community events.</p>
     <div class="herostats">
       <span><b data-count="30" data-suffix="th">0</b>to 70th birthdays</span>
       <span><b data-count="300" data-suffix="+">0</b>kids at the Junior Touch Cup</span>
@@ -620,8 +731,11 @@
   <div class="sechead wide" data-reveal style="margin-bottom:34px;">
     <div class="eyebrow">Welcome to King's Clubhouse</div>
     <h2>Big pitches, a proper bar and a braai. Bring the people.</h2>
-    <p class="lead">Kids' parties, 70th birthdays with a brass band, black-tie dinners in a marquee, outdoor cinema days, live bands and DJs on the balcony: we've hosted them all. Bring your own caterer or fire up our braai pits. Shape the day your way and we'll help make it happen. Every booking helps fund the development of the grounds.</p>
+    <p class="lead" data-clamp="3">Kids' parties, 70th birthdays with a brass band, black-tie dinners in a marquee, outdoor cinema days, live bands and DJs on the balcony: we've hosted them all. Bring your own caterer or fire up our braai pits. Shape the day your way and we'll help make it happen. Every booking helps fund the development of the grounds.</p>
   </div>
+  <!-- Mobile photo grid (replaces the slider on small screens): every venue photo, tap to enlarge -->
+  <div class="gallery" id="gallery" data-reveal aria-label="Photos of the clubhouse and grounds"></div>
+  <p class="gallery-hint">Tap any photo to enlarge</p>
   <div class="slider" id="slider" data-reveal aria-roledescription="carousel" aria-label="Around the clubhouse">
     <div class="slides" id="slides">
       <div class="slide on"><img data-photo="interior" alt="Clubhouse interior with bar, round tables and sofas" decoding="async"><div class="scap">Inside the clubhouse</div></div>
@@ -663,11 +777,11 @@
   </div>
   <div class="rooms sp">
     <div class="room"><div class="ph"><img data-photo="seating" alt="Clubhouse seating area with sofas and trophy cabinet" decoding="async"><small>Upstairs</small></div><div class="body"><h3>The Clubhouse</h3>
-        <ul><li>Capacity <b>200 standing / 100 seated</b></li><li>Good for <b>Birthdays, dinners, parties, screenings</b></li></ul><p>Our upstairs bar and clubhouse holds 200 standing or 100 seated. Use our big round tables for dinners or six-foot trestles for buffets and kids' parties. It has a licensed bar, and the balcony opens off it.</p><a class="btn ghost" href="#enquire" data-space="clubhouse">Enquire about this space</a><div class="avail">Minimum-spend bookings</div></div></div><div class="room"><div class="ph"><img data-photo="hero1" alt="The clubhouse in full swing on a summer evening" decoding="async"><small>Upstairs</small></div><div class="body"><h3>The Balcony</h3>
-        <ul><li>Capacity <b>Up to 100, runs the length of the building</b></li><li>Good for <b>Drinks with a view, DJ spot, speeches</b></li></ul><p>Our balcony runs the length of the building and holds up to 100. Big double sliding doors open from the bar straight onto it, so the party flows inside and out. Look out over the grounds with a drink in hand. It's the best seat for speeches, sunsets and DJs.</p><a class="btn ghost" href="#enquire" data-space="balcony">Enquire about this space</a></div></div><div class="room"><div class="ph blank"><span>Photo to come</span></div><div class="body"><h3>The Outdoor Kitchen &amp; Braai</h3>
-        <ul><li>Capacity <b>Feeds 150; gas grill, 2 braai pits, full countertops, room for 3 chefs</b></li><li>Good for <b>BBQs, cook-outs, family days</b></li></ul><p>Our outdoor kitchen has a gas grill, two braai pits and a full run of countertops, with room for three chefs. We've comfortably fed 150 guests from it. Bring your own caterer or your own tongs. It's perfect for summer BBQs, family days and match-day feasts.</p><a class="btn ghost" href="#enquire" data-space="braai">Enquire about this space</a><div class="avail">Bring your own caterer</div></div></div><div class="room"><div class="ph"><img data-photo="hero3" alt="Sunrise over the pitches from the clubhouse" decoding="async"><small>May–August</small></div><div class="body"><h3>The Grounds &amp; Marquee</h3>
+        <ul><li>Capacity <b>200 standing / 100 seated</b></li><li>Good for <b>Birthdays, dinners, parties, screenings</b></li></ul><p>Our upstairs bar and clubhouse holds 200 standing or 100 seated. Use our big round tables for dinners or six-foot trestles for buffets and kids' parties. It has a licensed bar, and the balcony opens off it.</p><a class="btn ghost" href="#enquire" data-space="clubhouse">Enquire about this space</a><div class="avail">Minimum-spend bookings</div></div></div><div class="room"><div class="ph"><img data-photo="hero3" alt="Looking out from the balcony over the pitches at sunrise" decoding="async"><small>Upstairs</small></div><div class="body"><h3>The Balcony</h3>
+        <ul><li>Capacity <b>Up to 100, runs the length of the building</b></li><li>Good for <b>Drinks with a view, DJ spot, speeches</b></li></ul><p>Our balcony runs the length of the building and holds up to 100. Big double sliding doors open from the bar straight onto it, so the party flows inside and out. Look out over the grounds with a drink in hand. It's the best seat for speeches, sunsets and DJs.</p><a class="btn ghost" href="#enquire" data-space="balcony">Enquire about this space</a></div></div><div class="room"><div class="ph"><img data-photo="hero1" alt="A summer evening on the grass outside the clubhouse" decoding="async"><small>Outside</small></div><div class="body"><h3>The Outdoor Kitchen &amp; Braai</h3>
+        <ul><li>Capacity <b>Feeds 150; gas grill, 2 braai pits, full countertops, room for 3 chefs</b></li><li>Good for <b>BBQs, cook-outs, family days</b></li></ul><p>Our outdoor kitchen has a gas grill, two braai pits and a full run of countertops, with room for three chefs. We've comfortably fed 150 guests from it. Bring your own caterer or your own tongs. It's perfect for summer BBQs, family days and match-day feasts.</p><a class="btn ghost" href="#enquire" data-space="braai">Enquire about this space</a><div class="avail">Bring your own caterer</div></div></div><div class="room"><div class="ph"><img data-photo="funday" alt="Open grass beside the clubhouse set up for a family day" decoding="async"><small>May–August</small></div><div class="body"><h3>The Grounds &amp; Marquee</h3>
         <ul><li>Capacity <b>150 seated in a marquee</b></li><li>Good for <b>Black-tie dinners, big birthdays, celebrations</b></li></ul><p>For something bigger, we can host a marquee for up to 150 seated guests from May to August. We've held black-tie dinners and milestone birthdays out here, with stages and bands outside.</p><a class="btn ghost" href="#enquire" data-space="marquee">Enquire about this space</a><div class="avail amber">By request, May–August</div></div></div><div class="room"><div class="ph"><img data-photo="pitches" alt="Pitches stretching out from the balcony at sunrise" decoding="async"><small>May–August</small></div><div class="body"><h3>The Pitches</h3>
-        <ul><li>Capacity <b>By arrangement</b></li><li>Good for <b>Kids' tournaments, sports days, festivals, outdoor cinema</b></li></ul><p>We open the pitches in the summer months for kids' rugby and touch tournaments, 7s, festivals and outdoor cinema. We protect them carefully, so they're by arrangement. Ask us.</p><a class="btn ghost" href="#enquire" data-space="pitches">Enquire about this space</a><div class="avail amber">By arrangement, May–August</div></div></div><div class="room"><div class="ph blank"><span>Photo to come</span></div><div class="body"><h3>Facilities</h3>
+        <ul><li>Capacity <b>By arrangement</b></li><li>Good for <b>Kids' tournaments, sports days, festivals, outdoor cinema</b></li></ul><p>We open the pitches in the summer months for kids' rugby and touch tournaments, 7s, festivals and outdoor cinema. We protect them carefully, so they're by arrangement. Ask us.</p><a class="btn ghost" href="#enquire" data-space="pitches">Enquire about this space</a><div class="avail amber">By arrangement, May–August</div></div></div><div class="room"><div class="ph"><img data-photo="hero2" alt="Evening match under floodlights with spectators on the touchline" decoding="async"><small>On site</small></div><div class="body"><h3>Facilities</h3>
         <ul><li>Capacity <b>6 changing rooms, accessible toilet (ground floor), parking for around 100 cars</b></li><li>Good for <b>Tournaments, sports days</b></li></ul><p>There are six changing rooms, toilets including an accessible toilet, and parking for around 100 cars on site. The grounds are step-free, but the bar and balcony are upstairs with no lift. Well-behaved dogs on a lead are very welcome.</p><a class="btn ghost" href="#faq">See the FAQ</a><div class="avail">Step-free grounds</div></div></div>
   </div>
 </div></section>
@@ -716,12 +830,18 @@
       <div><label class="lab" for="f-phone">Phone</label><input id="f-phone" type="tel" name="phone" required autocomplete="tel"></div>
       <div><label class="lab" for="f-type">Type of event</label><select id="f-type" name="event_type" required><option value="" disabled selected>Choose one</option><option value="kids">Kids' party</option><option value="birthday">Birthday or celebration</option><option value="bbq">BBQ or cook-out</option><option value="dinner">Formal dinner</option><option value="wedding">Wedding celebration</option><option value="tournament">Tournament or festival</option><option value="community">Community event</option><option value="corporate">Corporate</option><option value="other">Something else</option></select></div>
       <div><label class="lab" for="f-date">Preferred date</label><input id="f-date" type="date" name="preferred_date" required><label class="check"><input type="checkbox" name="dates_flexible" value="yes"> My dates are flexible</label></div>
-      <fieldset><legend>Rough start and finish time</legend><div class="two"><input type="time" name="start_time" aria-label="Start time"><input type="time" name="finish_time" aria-label="Finish time"></div></fieldset>
       <fieldset><legend>Number of guests</legend><div class="two"><input type="number" name="adults" min="0" inputmode="numeric" placeholder="Adults" aria-label="Adults"><input type="number" name="children" min="0" inputmode="numeric" placeholder="Children" aria-label="Children"></div></fieldset>
-      <fieldset class="full"><legend>Spaces you're interested in (tick any)</legend><div class="chiprow"><label class="chip"><input type="checkbox" name="spaces" value="clubhouse"><span>Bar &amp; clubhouse</span></label><label class="chip"><input type="checkbox" name="spaces" value="balcony"><span>Balcony</span></label><label class="chip"><input type="checkbox" name="spaces" value="braai"><span>Outdoor kitchen &amp; braai</span></label><label class="chip"><input type="checkbox" name="spaces" value="marquee"><span>Marquee</span></label><label class="chip"><input type="checkbox" name="spaces" value="pitches"><span>Pitches</span></label><label class="chip"><input type="checkbox" name="spaces" value="unsure"><span>Not sure</span></label></div></fieldset>
-      <fieldset><legend>Bringing your own caterer?</legend><div class="chiprow"><label class="chip"><input type="radio" name="caterer" value="yes"><span>Yes</span></label><label class="chip"><input type="radio" name="caterer" value="no"><span>No</span></label><label class="chip"><input type="radio" name="caterer" value="not-sure"><span>Not sure</span></label></div></fieldset>
-      <fieldset><legend>Are you a club member?</legend><div class="chiprow"><label class="chip"><input type="radio" name="member" value="yes"><span>Yes</span></label><label class="chip"><input type="radio" name="member" value="no"><span>No</span></label></div></fieldset>
       <div class="full"><label class="lab" for="f-msg">Tell us what you're thinking</label><textarea id="f-msg" name="message" placeholder="Got an idea? Don't be shy."></textarea></div>
+      <!-- Optional details: open on desktop, collapsed on phones (set in JS) -->
+      <details class="more full" id="enqMore">
+        <summary>Add more details <span>optional</span></summary>
+        <div class="moregrid">
+          <fieldset><legend>Rough start and finish time</legend><div class="two"><input type="time" name="start_time" aria-label="Start time"><input type="time" name="finish_time" aria-label="Finish time"></div></fieldset>
+          <fieldset><legend>Are you a club member?</legend><div class="chiprow"><label class="chip"><input type="radio" name="member" value="yes"><span>Yes</span></label><label class="chip"><input type="radio" name="member" value="no"><span>No</span></label></div></fieldset>
+          <fieldset class="full"><legend>Spaces you're interested in (tick any)</legend><div class="chiprow"><label class="chip"><input type="checkbox" name="spaces" value="clubhouse"><span>Bar &amp; clubhouse</span></label><label class="chip"><input type="checkbox" name="spaces" value="balcony"><span>Balcony</span></label><label class="chip"><input type="checkbox" name="spaces" value="braai"><span>Outdoor kitchen &amp; braai</span></label><label class="chip"><input type="checkbox" name="spaces" value="marquee"><span>Marquee</span></label><label class="chip"><input type="checkbox" name="spaces" value="pitches"><span>Pitches</span></label><label class="chip"><input type="checkbox" name="spaces" value="unsure"><span>Not sure</span></label></div></fieldset>
+          <fieldset class="full"><legend>Bringing your own caterer?</legend><div class="chiprow"><label class="chip"><input type="radio" name="caterer" value="yes"><span>Yes</span></label><label class="chip"><input type="radio" name="caterer" value="no"><span>No</span></label><label class="chip"><input type="radio" name="caterer" value="not-sure"><span>Not sure</span></label></div></fieldset>
+        </div>
+      </details>
       <div class="full ffoot"><button class="btn sage" type="submit">Send enquiry</button><small>We'll come back to you with availability and a quote.</small></div>
       <p class="err" role="alert"></p>
     </form>
@@ -772,7 +892,8 @@
     <h2>Questions, answered.</h2>
   </div>
   <div class="faqwrap">
-    <div class="faq" data-reveal><details><summary>How much does it cost?</summary><p>Hire starts from £250. Your quote depends on the space, the day and what you're planning. A bar minimum spend can replace the hire fee. Ask us for a quote.</p></details><details><summary>Do you take a deposit?</summary><p>Yes. The amount depends on the event and will be set out in your quote.</p></details><details><summary>What if we need to cancel or change the date?</summary><p>Our booking terms, including cancellations, come with your quote. Talk to us early and we'll do what we can.</p></details><details><summary>How far ahead should we book?</summary><p>Summer weekends and school holidays go first, so enquire as early as you can. For weddings, get in touch at least six months ahead.</p></details><details><summary>Do you host weddings?</summary><p>Yes, wedding celebrations and receptions, but only up to three a year. We're not licensed for ceremonies, so the legal ceremony takes place elsewhere, such as a register office or church, and the party comes back to us. The dates are hotly contested, so contact us at least six months in advance.</p></details><details><summary>What time can we arrive to set up?</summary><p>We'll agree set-up and clear-down times when you book.</p></details><details><summary>What time do events finish?</summary><p>All events finish by 11pm.</p></details><details><summary>Can we bring our own food?</summary><p>Yes. Bring your own caterer or cook in our outdoor kitchen. If you bring an external caterer, you're responsible for them, including their food hygiene rating and insurance.</p></details><details><summary>Can we bring our own drinks?</summary><p>The bar is run by the club, so drinks are bought at the bar. Ask us about minimum-spend packages and pre-ordered drinks for toasts.</p></details><details><summary>Can we decorate?</summary><p>Yes. Tell us your plans and we'll let you know what works in the space.</p></details><details><summary>Can we have music?</summary><p>Yes. We've hosted bands on an outdoor stage and DJs on the balcony.</p></details><details><summary>Can we have a bouncy castle?</summary><p>Yes. We work with a bouncy castle company we know and trust, and we can put you in touch. If you bring your own entertainers, you're responsible for them and their insurance.</p></details><details><summary>Are children welcome?</summary><p>Yes, we're a family venue. Children must be supervised by an adult from your party throughout.</p></details><details><summary>Can we bring the dog?</summary><p>Yes, dogs are very welcome, as long as they're well behaved and kept on a lead.</p></details><details><summary>Can we use the pitches or put up a marquee?</summary><p>From May to August, by arrangement. We look after our pitches carefully, so get in touch early.</p></details><details><summary>Is the venue accessible?</summary><p>Partly. The grounds, outdoor kitchen, marquee area and an accessible toilet are step-free. The bar and balcony are upstairs and there is no lift. Tell us your guests' needs and we'll plan the event around them.</p></details><details><summary>Is there parking?</summary><p>Yes, on site for around 100 cars. Motspur Park station is a 5-minute walk.</p></details><details><summary>Will someone from the club be there?</summary><p>Yes. Club staff are always on site during your event, and the bar is fully staffed.</p></details><details><summary>Where does the money go?</summary><p>Every booking helps fund the development of the club's grounds.</p></details></div>
+    <div class="faq" data-reveal><details><summary>How much does it cost?</summary><p>Hire starts from £250. Your quote depends on the space, the day and what you're planning. A bar minimum spend can replace the hire fee. Ask us for a quote.</p></details><details><summary>Do you take a deposit?</summary><p>Yes. The amount depends on the event and will be set out in your quote.</p></details><details><summary>What if we need to cancel or change the date?</summary><p>Our booking terms, including cancellations, come with your quote. Talk to us early and we'll do what we can.</p></details><details><summary>How far ahead should we book?</summary><p>Summer weekends and school holidays go first, so enquire as early as you can. For weddings, get in touch at least six months ahead.</p></details><details><summary>Do you host weddings?</summary><p>Yes, wedding celebrations and receptions, but only up to three a year. We're not licensed for ceremonies, so the legal ceremony takes place elsewhere, such as a register office or church, and the party comes back to us. The dates are hotly contested, so contact us at least six months in advance.</p></details><details><summary>What time can we arrive to set up?</summary><p>We'll agree set-up and clear-down times when you book.</p></details><details><summary>What time do events finish?</summary><p>All events finish by 11pm.</p></details><details><summary>Can we bring our own food?</summary><p>Yes. Bring your own caterer or cook in our outdoor kitchen. If you bring an external caterer, you're responsible for them, including their food hygiene rating and insurance.</p></details><details><summary>Can we bring our own drinks?</summary><p>The bar is run by the club, so drinks are bought at the bar. Ask us about minimum-spend packages and pre-ordered drinks for toasts.</p></details><details><summary>Can we decorate?</summary><p>Yes. Tell us your plans and we'll let you know what works in the space.</p></details><details><summary>Can we have music?</summary><p>Yes. We've hosted bands on an outdoor stage and DJs on the balcony.</p></details><details><summary>Can we have a bouncy castle?</summary><p>Yes. We work with a bouncy castle company we know and trust, and we can put you in touch. If you bring your own entertainers, you're responsible for them and their insurance.</p></details><details><summary>Are children welcome?</summary><p>Yes, we're a family venue. Children must be supervised by an adult from your party throughout.</p></details><details><summary>Can we bring the dog?</summary><p>Yes, dogs are very welcome, as long as they're well behaved and kept on a lead.</p></details><details><summary>Can we use the pitches or put up a marquee?</summary><p>From May to August, by arrangement. We look after our pitches carefully, so get in touch early.</p></details><details><summary>Is the venue accessible?</summary><p>Partly. The grounds, outdoor kitchen, marquee area and an accessible toilet are step-free. The bar and balcony are upstairs and there is no lift. Tell us your guests' needs and we'll plan the event around them.</p></details><details><summary>Is there parking?</summary><p>Yes, on site for around 100 cars. Motspur Park station is a 5-minute walk.</p></details><details><summary>Will someone from the club be there?</summary><p>Yes. Club staff are always on site during your event, and the bar is fully staffed.</p></details><details><summary>Where does the money go?</summary><p>Every booking helps fund the development of the club's grounds.</p></details>
+    <button class="faqmore" id="faqMore" type="button" aria-expanded="false">Show all 19 questions</button></div>
     <div class="find glass" data-reveal>
       <h3>Find us</h3>
       <address>King's Clubhouse<br>KCS Old Boys RFC<br>Arthur Road, Motspur Park<br>New Malden KT3 6LX</address>
@@ -817,10 +938,21 @@
     <div class="evm-body">
       <div class="tag" id="evmTag"></div>
       <h3 id="evmTitle"></h3>
+      <div class="evm-meta rows" id="evmMeta"></div>
       <p id="evmDesc"></p>
       <div class="evm-cta"><a class="btn sage" href="#enquire" id="evmEnquire">Plan something like this</a><button class="btn ghost" type="button" data-close>Close</button></div>
     </div>
   </div>
+</div>
+
+<!-- photo lightbox (gallery) -->
+<div class="lb" id="lb" role="dialog" aria-modal="true" aria-label="Photo viewer">
+  <button class="lb-x" type="button" data-lbclose aria-label="Close">✕</button>
+  <div class="lb-n" id="lbN"></div>
+  <button class="lb-nav lb-prev" type="button" data-lbprev aria-label="Previous photo">‹</button>
+  <img id="lbImg" alt="">
+  <button class="lb-nav lb-next" type="button" data-lbnext aria-label="Next photo">›</button>
+  <div class="lb-cap" id="lbCap"></div>
 </div>
 
 
@@ -856,7 +988,7 @@
   var modal=document.getElementById('evmodal'),form=document.getElementById('enquiryForm'),wrap=document.getElementById('enqWrap');
   function preselect(ev,sp){
     if(ev){var sel=form.querySelector('select[name=event_type]');if(sel&&sel.querySelector('option[value="'+ev+'"]'))sel.value=ev;}
-    if(sp){var box=form.querySelector('input[name=spaces][value="'+sp+'"]');if(box)box.checked=true;}
+    if(sp){var box=form.querySelector('input[name=spaces][value="'+sp+'"]');if(box){box.checked=true;var more=document.getElementById('enqMore');if(more)more.open=true;}}
   }
   function openEv(i){
     var e=EVENTS[i]; if(!e)return;
@@ -866,8 +998,10 @@
     else evmIm.addEventListener('load',function(){evmIm.classList.add('ld');},{once:true});
     document.getElementById('evmTag').textContent=e.tag;
     document.getElementById('evmTitle').textContent=e.title;
+    document.getElementById('evmMeta').innerHTML='';
     document.getElementById('evmDesc').textContent=e.desc;
-    document.getElementById('evmEnquire').setAttribute('data-event',e.id);
+    var cta=document.getElementById('evmEnquire');
+    cta.setAttribute('data-event',e.id);cta.removeAttribute('data-space');cta.setAttribute('href','#enquire');cta.textContent='Plan something like this';
     modal.classList.add('open');document.body.classList.add('lock');
   }
   function closeEv(){
@@ -886,7 +1020,7 @@
   });
   modal.addEventListener('click',function(ev){
     if(ev.target.closest('[data-close]'))closeEv();
-    var a=ev.target.closest('#evmEnquire');if(a){preselect(a.getAttribute('data-event'));closeEv();}
+    var a=ev.target.closest('#evmEnquire');if(a){preselect(a.getAttribute('data-event'),a.getAttribute('data-space'));closeEv();}
   });
   document.addEventListener('keydown',function(ev){if(ev.key==='Escape'&&modal.classList.contains('open'))closeEv();});
 
@@ -1019,6 +1153,113 @@
     });
   }else{
     document.querySelectorAll('.vhero [data-count]').forEach(function(el){el.textContent=finalText(el);});
+  }
+
+  /* ===== mobile-first pass (Oct 2026) ===== */
+  var phone=window.matchMedia('(max-width:760px)');
+
+  /* --- photo gallery (phones) + lightbox --- */
+  var GALLERY=[
+    {p:'hero1',c:'A summer evening outside the clubhouse'},
+    {p:'interior',c:'Inside the clubhouse'},
+    {p:'bar',c:'The bar'},
+    {p:'pitches',c:'Sunrise over the pitches from the balcony'},
+    {p:'funday',c:'A bouncy castle on the grass'},
+    {p:'seating',c:'Sofas and the trophy cabinet'},
+    {p:'floodlit',c:'Under the floodlights'},
+    {p:'hero3',c:'The view from the balcony'},
+    {p:'fundaycard',c:'Family day on the grounds'},
+    {p:'bigpitch',c:'Evening match on the big pitch'},
+    {p:'hero2',c:'Spectators on the touchline'}
+  ];
+  var gal=document.getElementById('gallery');
+  if(gal){
+    gal.innerHTML=GALLERY.map(function(g,i){return '<button type="button" data-g="'+i+'" aria-label="Enlarge photo: '+g.c+'"><img src="'+PHOTOS[g.p]+'" alt="'+g.c+'" loading="'+(i<3?'eager':'lazy')+'" decoding="async"></button>';}).join('');
+  }
+  var lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap'),lbN=document.getElementById('lbN'),lbI=0,lbLast=null;
+  function lbShow(i){
+    lbI=(i+GALLERY.length)%GALLERY.length;var g=GALLERY[lbI];
+    lbImg.src=PHOTOS[g.p];lbImg.alt=g.c;lbCap.textContent=g.c;lbN.textContent=(lbI+1)+' / '+GALLERY.length;
+  }
+  function lbOpen(i){lbLast=document.activeElement;lbShow(i);lb.classList.add('open');document.body.classList.add('lock');document.querySelector('.lb-x').focus();}
+  function lbClose(){lb.classList.remove('open');document.body.classList.remove('lock');if(lbLast&&lbLast.focus)lbLast.focus();}
+  if(gal&&lb){
+    gal.addEventListener('click',function(e){var b=e.target.closest('[data-g]');if(b)lbOpen(parseInt(b.getAttribute('data-g'),10));});
+    lb.addEventListener('click',function(e){
+      if(e.target.closest('[data-lbclose]')||e.target===lb)lbClose();
+      else if(e.target.closest('[data-lbprev]'))lbShow(lbI-1);
+      else if(e.target.closest('[data-lbnext]'))lbShow(lbI+1);
+    });
+    document.addEventListener('keydown',function(e){
+      if(!lb.classList.contains('open'))return;
+      if(e.key==='Escape')lbClose();else if(e.key==='ArrowLeft')lbShow(lbI-1);else if(e.key==='ArrowRight')lbShow(lbI+1);
+    });
+    var lx=null;
+    lb.addEventListener('touchstart',function(e){lx=e.touches[0].clientX;},{passive:true});
+    lb.addEventListener('touchend',function(e){if(lx===null)return;var dx=e.changedTouches[0].clientX-lx;if(Math.abs(dx)>40)lbShow(lbI+(dx<0?1:-1));lx=null;},{passive:true});
+  }
+
+  /* --- spaces: on phones a tile opens the full details in the sheet --- */
+  var spWrap=document.querySelector('.rooms.sp');
+  function openSpace(card){
+    var im=card.querySelector('.ph img'),badge=card.querySelector('.ph small'),h=card.querySelector('h3'),p=card.querySelector('p'),rows=card.querySelectorAll('li'),btn=card.querySelector('.btn');
+    var evmIm=document.getElementById('evmImg');
+    evmIm.classList.remove('ld');evmIm.src=im?im.src:'';evmIm.alt=im?im.alt:'';
+    if(evmIm.complete&&evmIm.naturalWidth>0)evmIm.classList.add('ld');else evmIm.addEventListener('load',function(){evmIm.classList.add('ld');},{once:true});
+    document.getElementById('evmTag').textContent=badge?badge.textContent:'Space';
+    document.getElementById('evmTitle').textContent=h?h.textContent:'';
+    document.getElementById('evmMeta').innerHTML=Array.prototype.map.call(rows,function(li){
+      var b=li.querySelector('b');var lab=li.firstChild&&li.firstChild.nodeType===3?li.firstChild.textContent.trim():'';
+      return '<span>'+lab+(lab?': ':'')+'<b>'+(b?b.textContent:'')+'</b></span>';
+    }).join('');
+    document.getElementById('evmDesc').textContent=p?p.textContent:'';
+    var cta=document.getElementById('evmEnquire');
+    cta.removeAttribute('data-event');
+    if(btn&&btn.hasAttribute('data-space')){cta.setAttribute('data-space',btn.getAttribute('data-space'));cta.setAttribute('href','#enquire');cta.textContent='Enquire about this space';}
+    else{cta.removeAttribute('data-space');cta.setAttribute('href',btn?btn.getAttribute('href'):'#enquire');cta.textContent=btn?btn.textContent:'Enquire now';}
+    modal.classList.add('open');document.body.classList.add('lock');
+  }
+  if(spWrap){
+    spWrap.addEventListener('click',function(e){
+      if(!phone.matches)return;
+      var card=e.target.closest('.room');if(!card)return;
+      if(e.target.closest('a'))return;
+      e.preventDefault();openSpace(card);
+    });
+    spWrap.querySelectorAll('.room').forEach(function(c){c.setAttribute('tabindex','0');c.setAttribute('role','button');});
+    spWrap.addEventListener('keydown',function(e){if(phone.matches&&(e.key==='Enter'||e.key===' ')){var c=e.target.closest('.room');if(c&&e.target===c){e.preventDefault();openSpace(c);}}});
+  }
+
+  /* --- read-more clamps (phones) --- */
+  function setupClamps(){
+    if(!phone.matches)return;
+    document.querySelectorAll('[data-clamp]').forEach(function(el){
+      if(el.getAttribute('data-clamp-done'))return;
+      el.setAttribute('data-clamp-done','1');
+      el.classList.add('clamp');el.style.webkitLineClamp=el.getAttribute('data-clamp')||'3';
+      if(el.scrollHeight>el.clientHeight+2){
+        var b=document.createElement('button');b.type='button';b.className='morebtn';b.textContent='Read more';b.setAttribute('aria-expanded','false');
+        b.addEventListener('click',function(){var o=el.classList.toggle('open');b.textContent=o?'Show less':'Read more';b.setAttribute('aria-expanded',o?'true':'false');});
+        el.insertAdjacentElement('afterend',b);
+      }else{el.classList.remove('clamp');}
+    });
+  }
+  if(document.fonts&&document.fonts.ready)document.fonts.ready.then(setupClamps);else window.addEventListener('load',setupClamps);
+  setTimeout(setupClamps,1200);
+
+  /* --- enquiry form: optional details collapsed on phones --- */
+  var enqMore=document.getElementById('enqMore');
+  if(enqMore)enqMore.open=!phone.matches;
+
+  /* --- FAQ: show all --- */
+  var faqMore=document.getElementById('faqMore'),faqEl=document.querySelector('.faq');
+  if(faqMore&&faqEl){
+    faqMore.addEventListener('click',function(){
+      var all=faqEl.classList.toggle('all');
+      faqMore.textContent=all?'Show fewer questions':'Show all 19 questions';
+      faqMore.setAttribute('aria-expanded',all?'true':'false');
+      if(!all)faqEl.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+    });
   }
 })();
 </script>

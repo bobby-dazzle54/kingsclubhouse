@@ -17,17 +17,25 @@ Hosted on **GitHub Pages** from the `main` branch; the custom domain is set by `
 
 ## Making a change
 
-The copy lives in `_build/build_onepage.py` in the **project folder** (not this repo). To change wording, prices, FAQs, events:
+**`index.html` in this repo is the source of truth** (since the mobile pass on 14 Oct 2026). Edit it directly — on GitHub (pencil icon) or locally — then commit and push. GitHub Pages redeploys within about a minute.
 
-```bash
-cd "~/Documents/Claude/Projects/The Clubhouse KT16"
-python3 _build/build_onepage.py            # rebuilds kings-kt3-glass-homepage.html (self-contained preview)
-cd kingsclubhouse-site                     # this repo, cloned inside the project folder
-python3 _build/deploy.py ../kings-kt3-glass-homepage.html   # rewrites index.html + photos/
-git add -A && git commit -m "Update copy" && git push
-```
+Do **not** re-run `_build/build_onepage.py` / `_build/deploy.py` from the project folder: they predate the mobile pass and would overwrite it. If you need the self-contained single-file preview again, rebuild it *from* this `index.html`, not the other way round.
 
-GitHub Pages redeploys within about a minute of each push. Quick one-word fixes can also be made directly in `index.html` on GitHub (pencil icon) — just mirror them in `build_onepage.py` later so they aren't lost on the next rebuild.
+Where things live in `index.html`:
+- Event cards → the `EVENTS` array in the script at the bottom (title, teaser, full text, photo key).
+- Spaces → the six `.room` cards in `<section id="spaces">`.
+- Pricing, FAQ, Find us → their sections, plain HTML.
+- Photo captions for the phone gallery → the `GALLERY` array in the script.
+
+### Mobile behaviour (≤760px)
+- Hero fits one screen; the proof points scroll sideways as pills.
+- The photo slider is replaced by a tap-to-enlarge grid of all 11 photos (lightbox).
+- Spaces show as six photo tiles; tapping one opens the full details in a bottom sheet with "Enquire about this space".
+- Long copy is clamped with "Read more"; the enquiry form keeps essentials up front with optional fields behind "Add more details"; FAQ shows 7 then "Show all 19 questions".
+- The Google-reviews placeholder is hidden on phones until live reviews are connected.
+
+### Photo notes
+No dedicated shots exist yet for the **Outdoor Kitchen & Braai** (currently the summer-evening-outside shot) or **Facilities** (currently the floodlit-match shot). Swap `data-photo` on those cards when real ones are taken; add new photos to `photos/` and the `PHOTOS` map at the top of the body.
 
 ## Still to wire up
 
