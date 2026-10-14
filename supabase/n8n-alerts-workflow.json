@@ -1,0 +1,52 @@
+{
+  "name": "King's Clubhouse · new enquiry / sign-up alert",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kingsclubhouse-alert",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "a1b2c3d4-0001-4000-8000-000000000001",
+      "name": "Supabase webhook",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "kingsclubhouse-alert"
+    },
+    {
+      "parameters": {
+        "jsCode": "const body = $input.first().json.body || $input.first().json;\nconst table = body.table || '';\nconst r = body.record || {};\nconst esc = s => String(s ?? '').replace(/[&<>]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;'}[c]));\nconst row = (k, v) => (v == null || v === '' || (Array.isArray(v) && !v.length)) ? '' : `<tr><td style=\"padding:6px 12px 6px 0;color:#77806e;white-space:nowrap;vertical-align:top\">${k}</td><td style=\"padding:6px 0\">${esc(Array.isArray(v) ? v.join(', ') : v)}</td></tr>`;\nconst types = {kids:\"Kids' party\", birthday:'Birthday or celebration', bbq:'BBQ or cook-out', dinner:'Formal dinner', wedding:'Wedding celebration', tournament:'Tournament or festival', community:'Community event', corporate:'Corporate', other:'Something else'};\nconst spaces = {clubhouse:'Bar & clubhouse', balcony:'Balcony', braai:'Outdoor kitchen & braai', marquee:'Marquee', pitches:'Pitches', unsure:'Not sure'};\nlet subject, rows;\nif (table === 'enquiries') {\n  subject = `New enquiry: ${r.name} · ${types[r.event_type] || r.event_type || 'event'}${r.preferred_date ? ' · ' + r.preferred_date : ''}`;\n  rows = [\n    row('Name', r.name), row('Email', r.email), row('Phone', r.phone), row('Event', types[r.event_type] || r.event_type),\n    row('Preferred date', r.preferred_date ? r.preferred_date + (r.dates_flexible ? ' (flexible)' : '') : (r.dates_flexible ? 'Flexible' : null)),\n    row('Times', (r.start_time || r.finish_time) ? `${r.start_time || '?'} → ${r.finish_time || '?'}` : null),\n    row('Guests', (r.adults != null || r.children != null) ? `${r.adults ?? 0} adults, ${r.children ?? 0} children` : null),\n    row('Spaces', (r.spaces || []).map(s => spaces[s] || s)), row('Own caterer', r.caterer), row('Club member', r.member), row('Message', r.message)\n  ].join('');\n} else if (table === 'signups') {\n  subject = `New community sign-up: ${r.name}`;\n  rows = [row('Name', r.name), row('Email', r.email), row('Mobile', r.mobile), row('Wants', [r.news ? 'Email news' : null, r.whatsapp ? 'WhatsApp group invite' : null].filter(Boolean))].join('');\n} else {\n  subject = `Website event: ${table || 'unknown'}`;\n  rows = row('Payload', JSON.stringify(body));\n}\nconst html = `<div style=\"font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;font-size:15px;color:#2C3327;line-height:1.5\"><p style=\"margin:0 0 12px\"><strong>${esc(subject)}</strong></p><table style=\"border-collapse:collapse\">${rows}</table><p style=\"margin:18px 0 0;color:#77806e;font-size:13px\">Open the staff area to update the status: <a href=\"https://kingsclubhouse.co.uk/staff/\">kingsclubhouse.co.uk/staff</a></p></div>`;\nreturn [{ json: { subject, html, table, replyTo: r.email || '' } }];"
+      },
+      "id": "a1b2c3d4-0002-4000-8000-000000000002",
+      "name": "Build email",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [260, 0]
+    },
+    {
+      "parameters": {
+        "sendTo": "CHANGE-ME@kingsclubhouse.co.uk",
+        "subject": "={{ $json.subject }}",
+        "emailType": "html",
+        "message": "={{ $json.html }}",
+        "options": {
+          "replyTo": "={{ $json.replyTo }}",
+          "senderName": "King's Clubhouse website"
+        }
+      },
+      "id": "a1b2c3d4-0003-4000-8000-000000000003",
+      "name": "Email the venue (Gmail)",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [520, 0]
+    }
+  ],
+  "connections": {
+    "Supabase webhook": { "main": [[{ "node": "Build email", "type": "main", "index": 0 }]] },
+    "Build email": { "main": [[{ "node": "Email the venue (Gmail)", "type": "main", "index": 0 }]] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "meta": { "instanceId": "import" }
+}

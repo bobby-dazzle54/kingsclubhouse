@@ -37,9 +37,32 @@ Where things live in `index.html`:
 ### Photo notes
 No dedicated shots exist yet for the **Outdoor Kitchen & Braai** (currently the summer-evening-outside shot) or **Facilities** (currently the floodlit-match shot). Swap `data-photo` on those cards when real ones are taken; add new photos to `photos/` and the `PHOTOS` map at the top of the body.
 
+## Staff area — `kingsclubhouse.co.uk/staff`
+
+Backend: **Supabase** (free tier). `staff/index.html` is a single-file admin (login · Enquiries · Sign-ups · Events · Photos + placements) using the vendored `staff/supabase.js` (supabase-js 2.45.4). The public site reads live content from the same database and falls back to the baked-in content if `config.js` is empty or the database is unreachable.
+
+| File | What it is |
+|---|---|
+| `config.js` | Project URL + **anon** key (public by design). Never the service_role key. |
+| `supabase/schema.sql` | Tables, row-level security, storage bucket, seed data. Paste into the Supabase SQL editor once; safe to re-run. |
+| `supabase/n8n-alerts-workflow.json` | Import into n8n for the "new enquiry / sign-up" email. |
+
+**Setting it up (once)**
+1. Supabase → New project (London, free). Project Settings → API → copy **Project URL** and **anon public** key into `config.js`, push.
+2. SQL Editor → paste `supabase/schema.sql` → Run.
+3. Authentication → Providers → Email: turn **off** "Allow new users to sign up" (only staff you add can log in). Authentication → URL configuration → Site URL `https://kingsclubhouse.co.uk`, add redirect `https://kingsclubhouse.co.uk/staff/`.
+4. Authentication → Users → **Add user** for each staff member (email + password). They can reset it from the login page.
+5. Email alerts: n8n → import `supabase/n8n-alerts-workflow.json`, set the Gmail credential and the venue address in the last node, activate, copy the **production** webhook URL. Supabase → Integrations → Database Webhooks → create one for `enquiries` (INSERT) and one for `signups` (INSERT) pointing at that URL.
+
+**How the pieces connect**
+- Visitors (anon key) can read events/photos/placements and insert one enquiry or sign-up — nothing else (row-level security in `schema.sql`).
+- Staff (any signed-in user) can do everything. Public sign-ups are disabled, so "signed in" means "staff".
+- Uploaded photos are resized to 1600px in the browser and stored in the public `photos` bucket; built-in photos stay in `photos/` in this repo.
+- Changing an event, placement or photo in the staff area is live on the site on the next page load — no deploy needed.
+
 ## Still to wire up
 
-- **Enquiry form** — currently *preview mode* (shows the thank-you, sends nothing). Set `data-endpoint` on `<form id="enquiryForm">` to a form handler URL (Formspree / FormSubmit / own backend) and enquiries will email the venue inbox. The community sign-up form needs a mailing-list endpoint the same way.
+- **Enquiry + sign-up forms** — store to Supabase once `config.js` is filled (see Staff area above). Until then they're in *preview mode* (thank-you only, nothing sent).
 - **Social links + WhatsApp invite** — `href="#"` placeholders until the handles/link are supplied.
 - **Google reviews strip** — placeholder cards until connected to live reviews (Places API).
 

@@ -1,5 +1,6 @@
 User-agent: *
 Allow: /
 Disallow: /_build/
+Disallow: /staff/
 
 Sitemap: https://kingsclubhouse.co.uk/sitemap.xml
