@@ -375,6 +375,10 @@
     .menu{display:none;}
     .navright .socials{display:none;}
     .burger{display:flex;}
+    /* logo centred, burger right */
+    nav{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;}
+    .brand{grid-column:2;justify-self:center;}
+    .navright{grid-column:3;justify-self:end;}
     .book{grid-template-columns:1fr;}
     .how{padding:44px 26px;}
   }
