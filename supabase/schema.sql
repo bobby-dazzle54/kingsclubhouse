@@ -34,7 +34,7 @@ create table if not exists public.events (
 
 -- ---------- placements (which photo sits in which fixed slot on the site) ----------
 create table if not exists public.placements (
-  slot          text primary key,                 -- hero1, hero2, hero3, highlight1..3, space.clubhouse, space.balcony, space.braai, space.marquee, space.pitches, space.facilities, pricing, slide1..5
+  slot          text primary key,                 -- hero1..4, highlight1..3, space.clubhouse, space.balcony, space.braai, space.marquee, space.pitches, space.facilities, pricing, slide1..8
   label         text not null,
   photo_id      uuid references public.photos(id) on delete set null
 );
@@ -130,38 +130,49 @@ create policy "staff write photo files"  on storage.objects for insert to authen
 create policy "staff update photo files" on storage.objects for update to authenticated using (bucket_id = 'photos');
 create policy "staff delete photo files" on storage.objects for delete to authenticated using (bucket_id = 'photos');
 
--- ---------- seed: the 11 baked-in photos ----------
+-- ---------- seed: the 18 baked-in photos ----------
 insert into public.photos (key, url, caption, alt, in_gallery, sort) values
-  ('hero1',      '/photos/hero1.webp',      'A summer evening outside the clubhouse',          'The clubhouse in full swing on a summer evening', true, 1),
-  ('interior',   '/photos/interior.webp',   'Inside the clubhouse',                            'Clubhouse interior with bar, round tables and sofas', true, 2),
-  ('bar',        '/photos/bar.webp',        'The bar',                                         'The clubhouse bar with round tables', true, 3),
-  ('pitches',    '/photos/pitches.webp',    'Sunrise over the pitches from the balcony',       'Pitches stretching out from the balcony at sunrise', true, 4),
-  ('funday',     '/photos/funday.webp',     'A bouncy castle on the grass',                    'Inflatable set up on the grass beside the clubhouse', true, 5),
-  ('seating',    '/photos/seating.webp',    'Sofas and the trophy cabinet',                    'Clubhouse seating area with sofas and trophy cabinet', true, 6),
-  ('floodlit',   '/photos/floodlit.webp',   'Under the floodlights',                           'Evening match under the floodlights', true, 7),
-  ('hero3',      '/photos/hero3.webp',      'The view from the balcony',                       'Sunrise over the pitches from the clubhouse', true, 8),
-  ('fundaycard', '/photos/fundaycard.webp', 'Family day on the grounds',                       'Inflatable on the grass for a family day', true, 9),
-  ('bigpitch',   '/photos/bigpitch.webp',   'Evening match on the big pitch',                  'Floodlit match on the big pitch', true, 10),
-  ('hero2',      '/photos/hero2.webp',      'Spectators on the touchline',                     'Evening match under floodlights with spectators on the touchline', true, 11)
+  ('hero1',         '/photos/hero1.webp',         'A summer evening outside the clubhouse',          'The clubhouse in full swing on a summer evening', true, 1),
+  ('marqueeparty',  '/photos/marqueeparty.webp',  'A live band in the marquee',                      'Guests dancing to a live band in a marquee', true, 2),
+  ('interior',      '/photos/interior.webp',      'Inside the clubhouse',                            'Clubhouse interior with bar, round tables and sofas', true, 3),
+  ('cinema',        '/photos/cinema.webp',        'Outdoor cinema at sunset',                        'Families on blankets and deckchairs watching an outdoor cinema screen at sunset', true, 4),
+  ('marqueedinner', '/photos/marqueedinner.webp', 'Summer dinner in the marquee',                    'Guests at round tables at a summer dinner in a marquee', true, 5),
+  ('floodlit',      '/photos/floodlit.webp',      'Under the floodlights',                           'Evening match under the floodlights', true, 6),
+  ('pitches',       '/photos/pitches.webp',       'Sunrise over the pitches from the balcony',       'Pitches stretching out from the balcony at sunrise', true, 7),
+  ('clubroom',      '/photos/clubroom.webp',      'The clubhouse, set for a function',               'The clubhouse function room with round tables, sofas and the honours board', true, 8),
+  ('funday',        '/photos/funday.webp',        'A bouncy castle on the grass',                    'Inflatable set up on the grass beside the clubhouse', true, 9),
+  ('watchparty',    '/photos/watchparty.webp',    'Big match on the big screen',                     'Crowd watching a rugby match on a big screen outdoors', true, 10),
+  ('oktoberfest',   '/photos/oktoberfest.webp',   'Oktoberfest night',                               'Guests in lederhosen and dirndls at an Oktoberfest party', true, 11),
+  ('bigpitch',      '/photos/bigpitch.webp',      'Evening match on the big pitch',                  'Floodlit match on the big pitch', true, 12),
+  ('hero3',         '/photos/hero3.webp',         'The view from the balcony',                       'Sunrise over the pitches from the clubhouse', true, 13),
+  ('hero2',         '/photos/hero2.webp',         'Spectators on the touchline',                     'Evening match under floodlights with spectators on the touchline', true, 14),
+  ('fundaycard',    '/photos/fundaycard.webp',    'Family day on the grounds',                       'Inflatable on the grass for a family day', true, 15),
+  ('bar',           '/photos/bar.webp',           'The bar',                                         'The clubhouse bar with round tables', true, 16),
+  ('seating',       '/photos/seating.webp',       'Sofas and the trophy cabinet',                    'Clubhouse seating area with sofas and trophy cabinet', true, 17),
+  ('nightmatch',    '/photos/nightmatch.webp',    'A floodlit evening match',                        'Floodlit evening match with spectators along the rail', true, 18)
 on conflict (key) do nothing;
 
 -- ---------- seed: fixed photo slots ----------
 insert into public.placements (slot, label, photo_id) values
   ('hero1',            'Hero slide 1',                      (select id from public.photos where key='hero1')),
-  ('hero2',            'Hero slide 2',                      (select id from public.photos where key='hero2')),
-  ('hero3',            'Hero slide 3',                      (select id from public.photos where key='hero3')),
-  ('slide1',           'Welcome slider 1 (desktop)',        (select id from public.photos where key='interior')),
-  ('slide2',           'Welcome slider 2 (desktop)',        (select id from public.photos where key='bar')),
-  ('slide3',           'Welcome slider 3 (desktop)',        (select id from public.photos where key='pitches')),
-  ('slide4',           'Welcome slider 4 (desktop)',        (select id from public.photos where key='funday')),
-  ('slide5',           'Welcome slider 5 (desktop)',        (select id from public.photos where key='floodlit')),
+  ('hero2',            'Hero slide 2',                      (select id from public.photos where key='marqueeparty')),
+  ('hero3',            'Hero slide 3',                      (select id from public.photos where key='nightmatch')),
+  ('hero4',            'Hero slide 4',                      (select id from public.photos where key='hero3')),
+  ('slide1',           'Welcome slider 1 (desktop)',        (select id from public.photos where key='clubroom')),
+  ('slide2',           'Welcome slider 2 (desktop)',        (select id from public.photos where key='marqueedinner')),
+  ('slide3',           'Welcome slider 3 (desktop)',        (select id from public.photos where key='bar')),
+  ('slide4',           'Welcome slider 4 (desktop)',        (select id from public.photos where key='cinema')),
+  ('slide5',           'Welcome slider 5 (desktop)',        (select id from public.photos where key='oktoberfest')),
+  ('slide6',           'Welcome slider 6 (desktop)',        (select id from public.photos where key='watchparty')),
+  ('slide7',           'Welcome slider 7 (desktop)',        (select id from public.photos where key='pitches')),
+  ('slide8',           'Welcome slider 8 (desktop)',        (select id from public.photos where key='marqueeparty')),
   ('highlight1',       'Highlight card: Room to roam',      (select id from public.photos where key='pitches')),
   ('highlight2',       'Highlight card: Your event, your way', (select id from public.photos where key='fundaycard')),
   ('highlight3',       'Highlight card: A proper bar',      (select id from public.photos where key='bar')),
-  ('space.clubhouse',  'Space: The Clubhouse',              (select id from public.photos where key='seating')),
+  ('space.clubhouse',  'Space: The Clubhouse',              (select id from public.photos where key='clubroom')),
   ('space.balcony',    'Space: The Balcony',                (select id from public.photos where key='hero3')),
   ('space.braai',      'Space: Outdoor Kitchen & Braai',    (select id from public.photos where key='hero1')),
-  ('space.marquee',    'Space: Grounds & Marquee',          (select id from public.photos where key='funday')),
+  ('space.marquee',    'Space: Grounds & Marquee',          (select id from public.photos where key='marqueedinner')),
   ('space.pitches',    'Space: The Pitches',                (select id from public.photos where key='pitches')),
   ('space.facilities', 'Space: Facilities',                 (select id from public.photos where key='hero2')),
   ('pricing',          'Pricing section photo',             (select id from public.photos where key='bar'))
@@ -171,14 +182,14 @@ on conflict (slot) do nothing;
 insert into public.events (slug, tag, title, teaser, description, photo_id, sort, visible)
 select * from (values
   ('kids',       'School holidays', 'Kids'' parties',                         'Space to run, pitches to play on, a clubhouse for cake and a braai for the grown-ups.', 'Space to run, pitches to play on, a clubhouse for cake and a braai for the grown-ups. Bring an entertainer or a bouncy castle, or ask us about a rugby or touch session for the kids. It''s ideal for school-holiday birthdays.', (select id from public.photos where key='fundaycard'), 1, true),
-  ('birthday',   '30th to 70th',    'Milestone birthdays',                    'We''ve celebrated 30ths, 40ths, 50ths and 60ths.', 'We''ve celebrated 30ths, 40ths, 50ths and 60ths. This summer we''re hosting a 70th with a brass band. Use the clubhouse and bar, or go big with a marquee and a stage.', (select id from public.photos where key='interior'), 2, true),
+  ('birthday',   '30th to 70th',    'Milestone birthdays',                    'We''ve celebrated 30ths, 40ths, 50ths and 60ths.', 'We''ve celebrated 30ths, 40ths, 50ths and 60ths. This summer we''re hosting a 70th with a brass band. Use the clubhouse and bar, or go big with a marquee and a stage.', (select id from public.photos where key='oktoberfest'), 2, true),
   ('bbq',        'Outdoor kitchen', 'BBQs and cook-outs',                     'Our outdoor kitchen and braai pits make it easy.', 'Our outdoor kitchen and braai pits make it easy. Fire them up for a family day, a team social or an end-of-term party. Bring your own food or your own caterer.', (select id from public.photos where key='hero1'), 3, true),
-  ('dinner',     'Marquee',         'Formal dinners',                         'We''ve hosted black-tie dinners in a marquee on the grounds, with seating for up to 150 guests from May to August.', 'We''ve hosted black-tie dinners in a marquee on the grounds, with seating for up to 150 guests from May to August.', (select id from public.photos where key='seating'), 4, true),
+  ('dinner',     'Marquee',         'Formal dinners',                         'We''ve hosted black-tie dinners in a marquee on the grounds, with seating for up to 150 guests from May to August.', 'We''ve hosted black-tie dinners in a marquee on the grounds, with seating for up to 150 guests from May to August.', (select id from public.photos where key='marqueedinner'), 4, true),
   ('wedding',    'Three a year',    'Wedding celebrations',                   'Say “I do” wherever you like, then bring everyone back to ours.', 'Say “I do” wherever you like, then bring everyone back to ours. Hold a marquee on the grounds, a braai feast, speeches on the balcony and dancing in the bar. We host just three weddings a year and the dates go fast, so get in touch at least six months ahead.', (select id from public.photos where key='hero3'), 5, true),
-  ('other',      'Stage & balcony', 'Live music and DJs',                     'Bands on an outdoor stage and DJs on the balcony.', 'Bands on an outdoor stage and DJs on the balcony. We''ve done it and it works.', (select id from public.photos where key='bar'), 6, true),
+  ('other',      'Stage & balcony', 'Live music and DJs',                     'Bands on an outdoor stage and DJs on the balcony.', 'Bands on an outdoor stage and DJs on the balcony. We''ve done it and it works.', (select id from public.photos where key='marqueeparty'), 6, true),
   ('tournament', 'Pitches',         'Tournaments and festivals',              'In July 2025 the Junior Touch Cup brought more than 300 kids to the club, with a barbecue running all day.', 'In July 2025 the Junior Touch Cup brought more than 300 kids to the club, with a barbecue running all day. We''ve hosted mini rugby festivals with over 100 teams, plus 7s competitions. Six changing rooms and plenty of grass make it straightforward.', (select id from public.photos where key='floodlit'), 7, true),
-  ('community',  'Community',       'Community days and outdoor cinema',      'Our three outdoor cinema days brought the whole neighbourhood out.', 'Our three outdoor cinema days brought the whole neighbourhood out. Planning a fundraiser, fete or summer screening? Talk to us.', (select id from public.photos where key='funday'), 8, true),
-  ('community',  'Big matches',     'Watch parties and international nights', 'Our South African series nights round the braai are a club favourite.', 'Our South African series nights round the braai are a club favourite. They''re great for big matches and cultural celebrations.', (select id from public.photos where key='bigpitch'), 9, true),
+  ('community',  'Community',       'Community days and outdoor cinema',      'Our three outdoor cinema days brought the whole neighbourhood out.', 'Our three outdoor cinema days brought the whole neighbourhood out. Planning a fundraiser, fete or summer screening? Talk to us.', (select id from public.photos where key='cinema'), 8, true),
+  ('community',  'Big matches',     'Watch parties and international nights', 'Our South African series nights round the braai are a club favourite.', 'Our South African series nights round the braai are a club favourite. They''re great for big matches and cultural celebrations.', (select id from public.photos where key='watchparty'), 9, true),
   ('corporate',  'Team days',       'Corporate and team days',                'Team BBQs, sports days and summer socials, with a bar, open grass and parking for around 100 cars.', 'Team BBQs, sports days and summer socials, with a bar, open grass and parking for around 100 cars.', (select id from public.photos where key='pitches'), 10, true)
 ) as v(slug, tag, title, teaser, description, photo_id, sort, visible)
 where not exists (select 1 from public.events);

@@ -529,7 +529,7 @@
       PL=r.data||[];renderSlots();renderPhotos();
     });
   }
-  var SLOT_ORDER=['hero1','hero2','hero3','space.clubhouse','space.balcony','space.braai','space.marquee','space.pitches','space.facilities','highlight1','highlight2','highlight3','pricing','slide1','slide2','slide3','slide4','slide5'];
+  var SLOT_ORDER=['hero1','hero2','hero3','hero4','space.clubhouse','space.balcony','space.braai','space.marquee','space.pitches','space.facilities','highlight1','highlight2','highlight3','pricing','slide1','slide2','slide3','slide4','slide5','slide6','slide7','slide8'];
   function renderSlots(){
     var opts=function(sel){return '<option value="">— none —</option>'+PH.map(function(p){return '<option value="'+p.id+'"'+(p.id===sel?' selected':'')+'>'+esc(p.caption||p.key||'photo')+'</option>';}).join('');};
     var sorted=PL.slice().sort(function(a,b){return SLOT_ORDER.indexOf(a.slot)-SLOT_ORDER.indexOf(b.slot);});
