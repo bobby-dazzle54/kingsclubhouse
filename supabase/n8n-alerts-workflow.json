@@ -27,7 +27,7 @@
     },
     {
       "parameters": {
-        "sendTo": "CHANGE-ME@kingsclubhouse.co.uk",
+        "sendTo": "info@kingsclubhouse.co.uk",
         "subject": "={{ $json.subject }}",
         "emailType": "html",
         "message": "={{ $json.html }}",

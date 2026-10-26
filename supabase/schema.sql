@@ -34,7 +34,7 @@ create table if not exists public.events (
 
 -- ---------- placements (which photo sits in which fixed slot on the site) ----------
 create table if not exists public.placements (
-  slot          text primary key,                 -- hero1..4, highlight1..3, space.clubhouse, space.balcony, space.braai, space.marquee, space.pitches, space.facilities, pricing, slide1..8
+  slot          text primary key,                 -- hero1..4, highlight1..3, space.clubhouse, space.braai, space.marquee, space.pitches, space.whole, enquire, slide1..8
   label         text not null,
   photo_id      uuid references public.photos(id) on delete set null
 );
@@ -170,12 +170,11 @@ insert into public.placements (slot, label, photo_id) values
   ('highlight2',       'Highlight card: Your event, your way', (select id from public.photos where key='fundaycard')),
   ('highlight3',       'Highlight card: A proper bar',      (select id from public.photos where key='bar')),
   ('space.clubhouse',  'Space: The Clubhouse',              (select id from public.photos where key='clubroom')),
-  ('space.balcony',    'Space: The Balcony',                (select id from public.photos where key='hero3')),
   ('space.braai',      'Space: Outdoor Kitchen & Braai',    (select id from public.photos where key='hero1')),
   ('space.marquee',    'Space: Grounds & Marquee',          (select id from public.photos where key='marqueedinner')),
-  ('space.pitches',    'Space: The Pitches',                (select id from public.photos where key='pitches')),
-  ('space.facilities', 'Space: Facilities',                 (select id from public.photos where key='hero2')),
-  ('pricing',          'Pricing section photo',             (select id from public.photos where key='bar'))
+  ('space.pitches',    'Space: The Pitches',                (select id from public.photos where key='nightmatch')),
+  ('space.whole',      'Space: The Whole Venue',            (select id from public.photos where key='hero3')),
+  ('enquire',          'Enquiry section background',        (select id from public.photos where key='marqueeparty'))
 on conflict (slot) do nothing;
 
 -- ---------- seed: the 10 events (only if the table is empty) ----------
@@ -193,6 +192,41 @@ select * from (values
   ('corporate',  'Team days',       'Corporate and team days',                'Team BBQs, sports days and summer socials, with a bar, open grass and parking for around 100 cars.', 'Team BBQs, sports days and summer socials, with a bar, open grass and parking for around 100 cars.', (select id from public.photos where key='pitches'), 10, true)
 ) as v(slug, tag, title, teaser, description, photo_id, sort, visible)
 where not exists (select 1 from public.events);
+
+-- ---------- what's on calendar (staff area → Calendar) ----------
+create table if not exists public.calendar_events (
+  id           uuid primary key default gen_random_uuid(),
+  title        text not null,
+  event_date   date not null,
+  start_time   text,                                   -- 'HH:MM', optional
+  end_time     text,                                   -- 'HH:MM', optional
+  location     text not null default 'King''s Clubhouse',
+  price        text not null default 'Free',           -- label on the card: 'Free', '£5', 'Members'…
+  description  text not null default '',
+  link_url     text,                                   -- optional booking/ticket link
+  photo_id     uuid references public.photos(id) on delete set null,
+  visible      boolean not null default true,
+  created_at   timestamptz not null default now(),
+  updated_at   timestamptz not null default now()
+);
+create index if not exists calendar_events_date_idx on public.calendar_events (event_date);
+drop trigger if exists calendar_touch on public.calendar_events;
+create trigger calendar_touch before update on public.calendar_events for each row execute function public.touch_updated_at();
+
+alter table public.calendar_events enable row level security;
+drop policy if exists "public read calendar" on public.calendar_events;
+drop policy if exists "staff all calendar"   on public.calendar_events;
+create policy "public read calendar" on public.calendar_events for select to anon using (visible);
+create policy "staff all calendar"   on public.calendar_events for all to authenticated using (true) with check (true);
+grant select on public.calendar_events to anon;
+grant select, insert, update, delete on public.calendar_events to authenticated;
+
+create or replace view public.site_calendar with (security_invoker = true) as
+  select c.id, c.title, c.event_date, c.start_time, c.end_time, c.location, c.price, c.description, c.link_url, p.url as photo_url
+  from public.calendar_events c left join public.photos p on p.id = c.photo_id
+  where c.visible
+  order by c.event_date, c.start_time nulls first;
+grant select on public.site_calendar to anon, authenticated;
 
 -- ---------- views for the public site (one round-trip each) ----------
 create or replace view public.site_events with (security_invoker = true) as

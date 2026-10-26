@@ -7,7 +7,7 @@ Hosted on **GitHub Pages** from the `main` branch; the custom domain is set by `
 
 | Path | What it is |
 |---|---|
-| `index.html` | The whole site — one liquid-glass page (hero, events deck, spaces, pricing, enquiry form, FAQ, find us) |
+| `index.html` | The whole site — one liquid-glass page (hero, events deck, spaces, enquiry form, what's on calendar, sign-up, FAQ, find us) |
 | `photos/` | The 18 venue photos (`.webp`) + `og.jpg` share image for link previews |
 | `404.html` | Not-found page, points back to `/` |
 | `CNAME` | `kingsclubhouse.co.uk` — tells GitHub Pages which domain serves the site |
@@ -23,19 +23,22 @@ Do **not** re-run `_build/build_onepage.py` / `_build/deploy.py` from the projec
 
 Where things live in `index.html`:
 - Event cards → the `EVENTS` array in the script at the bottom (title, teaser, full text, photo key).
-- Spaces → the six `.room` cards in `<section id="spaces">`.
-- Pricing, FAQ, Find us → their sections, plain HTML.
+- Spaces → the five `.room` cards in `<section id="spaces">` (Clubhouse, Outdoor Kitchen & Braai, Grounds & Marquee, Pitches, and the wide `.room.whole` Whole Venue card).
+- What's on → `<section id="calendar">`; dates come from Supabase (`site_calendar`), edited in the staff area → Calendar.
+- FAQ, Find us → their sections, plain HTML.
+- Contact email: **info@kingsclubhouse.co.uk** (header, hero, enquiry panel, Find us, footer, mobile menu, 404).
 - Photo captions for the phone gallery → the `GALLERY` array in the script.
 
 ### Mobile behaviour (≤760px)
 - Hero fits one screen; the proof points scroll sideways as pills.
 - The photo slider is replaced by a tap-to-enlarge grid of all 18 photos (lightbox).
-- Spaces show as six photo tiles; tapping one opens the full details in a bottom sheet with "Enquire about this space".
+- Spaces show as photo tiles (Whole Venue full width); tapping one opens the full details in a bottom sheet with "Enquire about this space".
+- The calendar shows dots on days with events; tapping a day lists that day's events below.
 - Long copy is clamped with "Read more"; the enquiry form keeps essentials up front with optional fields behind "Add more details"; FAQ shows 7 then "Show all 19 questions".
 - The Google-reviews placeholder is hidden on phones until live reviews are connected.
 
 ### Photo notes
-No dedicated shots exist yet for the **Outdoor Kitchen & Braai** (currently the summer-evening-outside shot) or **Facilities** (currently the floodlit-match shot). Swap `data-photo` on those cards when real ones are taken; add new photos to `photos/` and the `PHOTOS` map at the top of the body.
+No dedicated shot exists yet for the **Outdoor Kitchen & Braai** (currently the summer-evening-outside shot). Swap `data-photo` on those cards when real ones are taken; add new photos to `photos/` and the `PHOTOS` map at the top of the body.
 
 **Because the live site reads placements, events and the gallery from Supabase, a photo change in `index.html` alone is overridden on page load** — change the database too (staff area, or a migration in `supabase/` pasted into the SQL editor, as with `2026-10-26-new-photos.sql`).
 
@@ -43,13 +46,13 @@ Photos added 26 Oct 2026: `nightmatch`, `clubroom`, `marqueeparty`, `marqueedinn
 
 ## Staff area — `kingsclubhouse.co.uk/staff`
 
-Backend: **Supabase** (free tier). `staff/index.html` is a single-file admin (login · Enquiries · Sign-ups · Events · Photos + placements) using the vendored `staff/supabase.js` (supabase-js 2.45.4). The public site reads live content from the same database and falls back to the baked-in content if `config.js` is empty or the database is unreachable.
+Backend: **Supabase** (free tier). `staff/index.html` is a single-file admin (login · Enquiries · Sign-ups · Events · Calendar · Photos + placements) using the vendored `staff/supabase.js` (supabase-js 2.45.4). The public site reads live content from the same database and falls back to the baked-in content if `config.js` is empty or the database is unreachable.
 
 | File | What it is |
 |---|---|
 | `config.js` | Project URL + **publishable** key (public by design). Never a secret / service_role key. |
 | `supabase/schema.sql` | Tables, row-level security, storage bucket, seed data. Paste into the Supabase SQL editor once; safe to re-run. |
-| `supabase/n8n-alerts-workflow.json` | Import into n8n for the "new enquiry / sign-up" email. |
+| `supabase/n8n-alerts-workflow.json` | Import into n8n for the "new enquiry / sign-up" email (sends to info@kingsclubhouse.co.uk). |
 
 **Setting it up (once)**
 1. Supabase → New project (London, free). Project Settings → API Keys → copy the **Project URL** and the **publishable** key (`sb_publishable_…`) into `config.js`, push.
