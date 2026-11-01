@@ -1,0 +1,137 @@
+{
+  "name": "King's Clubhouse · CRM send reply (info@)",
+  "nodes": [
+    {
+      "parameters": {
+        "httpMethod": "POST",
+        "path": "kingsclubhouse-crm-send",
+        "responseMode": "onReceived",
+        "options": {}
+      },
+      "id": "b2c3d4e5-0001-4000-8000-000000000001",
+      "name": "Reply webhook (from Supabase)",
+      "type": "n8n-nodes-base.webhook",
+      "typeVersion": 2,
+      "position": [0, 0],
+      "webhookId": "kingsclubhouse-crm-send"
+    },
+    {
+      "parameters": {
+        "jsCode": "// ▶ Paste these three from the staff area → Settings → Email, and Supabase → Project Settings → API.\nconst SETTINGS = {\n  secret: 'PASTE-THE-SHARED-SECRET-HERE',\n  supabaseUrl: 'https://dnjqpcaryfinyicvzkiy.supabase.co',\n  anonKey: 'PASTE-THE-PUBLISHABLE-ANON-KEY-HERE'\n};\nconst body = $input.first().json.body || $input.first().json;\nif (!body || body.secret !== SETTINGS.secret) { return []; } // wrong secret: do nothing\nreturn [{ json: {\n  outbox_id: body.outbox_id, enquiry_id: body.enquiry_id,\n  to: body.to, to_name: body.to_name || '', subject: body.subject || \"Your enquiry to King's Clubhouse\",\n  text: body.body || '', thread_id: body.thread_id || null, in_reply_to: body.in_reply_to || null,\n  supabaseUrl: SETTINGS.supabaseUrl, anonKey: SETTINGS.anonKey, secret: SETTINGS.secret\n}}];"
+      },
+      "id": "b2c3d4e5-0002-4000-8000-000000000002",
+      "name": "Settings",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [240, 0]
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": { "caseSensitive": true, "leftValue": "", "typeValidation": "loose" },
+          "conditions": [
+            { "id": "c1", "leftValue": "={{ $json.in_reply_to }}", "rightValue": "", "operator": { "type": "string", "operation": "notEmpty", "singleValue": true } }
+          ],
+          "combinator": "and"
+        },
+        "options": {}
+      },
+      "id": "b2c3d4e5-0003-4000-8000-000000000003",
+      "name": "Replying to an email they sent?",
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2,
+      "position": [480, 0]
+    },
+    {
+      "parameters": {
+        "resource": "message",
+        "operation": "reply",
+        "messageId": "={{ $json.in_reply_to }}",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": { "senderName": "King's Clubhouse", "appendAttribution": false }
+      },
+      "id": "b2c3d4e5-0004-4000-8000-000000000004",
+      "name": "Gmail: reply in thread",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [760, -120],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $json.to }}",
+        "subject": "={{ $json.subject }}",
+        "emailType": "text",
+        "message": "={{ $json.text }}",
+        "options": { "senderName": "King's Clubhouse", "appendAttribution": false, "replyTo": "info@kingsclubhouse.co.uk" }
+      },
+      "id": "b2c3d4e5-0005-4000-8000-000000000005",
+      "name": "Gmail: send new email",
+      "type": "n8n-nodes-base.gmail",
+      "typeVersion": 2.1,
+      "position": [760, 120],
+      "onError": "continueErrorOutput"
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').item.json.supabaseUrl }}/rest/v1/rpc/crm_mark_sent",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [
+          { "name": "apikey", "value": "={{ $('Settings').item.json.anonKey }}" },
+          { "name": "Authorization", "value": "=Bearer {{ $('Settings').item.json.anonKey }}" },
+          { "name": "Content-Type", "value": "application/json" }
+        ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_secret: $('Settings').item.json.secret, p_outbox_id: $('Settings').item.json.outbox_id, p_message_id: $json.id || null, p_thread_id: $json.threadId || $('Settings').item.json.thread_id || null }) }}",
+        "options": {}
+      },
+      "id": "b2c3d4e5-0006-4000-8000-000000000006",
+      "name": "Tell the CRM it was sent",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1040, 0]
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "={{ $('Settings').item.json.supabaseUrl }}/rest/v1/rpc/crm_mark_failed",
+        "sendHeaders": true,
+        "headerParameters": { "parameters": [
+          { "name": "apikey", "value": "={{ $('Settings').item.json.anonKey }}" },
+          { "name": "Authorization", "value": "=Bearer {{ $('Settings').item.json.anonKey }}" },
+          { "name": "Content-Type", "value": "application/json" }
+        ] },
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={{ JSON.stringify({ p_secret: $('Settings').item.json.secret, p_outbox_id: $('Settings').item.json.outbox_id, p_error: String(($json.error && ($json.error.message || $json.error.description)) || $json.message || 'Gmail did not accept the message') }) }}",
+        "options": {}
+      },
+      "id": "b2c3d4e5-0007-4000-8000-000000000007",
+      "name": "Tell the CRM it failed",
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.2,
+      "position": [1040, 260]
+    }
+  ],
+  "connections": {
+    "Reply webhook (from Supabase)": { "main": [[{ "node": "Settings", "type": "main", "index": 0 }]] },
+    "Settings": { "main": [[{ "node": "Replying to an email they sent?", "type": "main", "index": 0 }]] },
+    "Replying to an email they sent?": { "main": [
+      [{ "node": "Gmail: reply in thread", "type": "main", "index": 0 }],
+      [{ "node": "Gmail: send new email", "type": "main", "index": 0 }]
+    ] },
+    "Gmail: reply in thread": { "main": [
+      [{ "node": "Tell the CRM it was sent", "type": "main", "index": 0 }],
+      [{ "node": "Tell the CRM it failed", "type": "main", "index": 0 }]
+    ] },
+    "Gmail: send new email": { "main": [
+      [{ "node": "Tell the CRM it was sent", "type": "main", "index": 0 }],
+      [{ "node": "Tell the CRM it failed", "type": "main", "index": 0 }]
+    ] }
+  },
+  "settings": { "executionOrder": "v1" },
+  "meta": { "instanceId": "import" }
+}
