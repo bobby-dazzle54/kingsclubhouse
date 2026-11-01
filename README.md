@@ -47,26 +47,38 @@ No dedicated shot exists yet for the **Outdoor Kitchen & Braai** (currently the 
 
 Photos added 26 Oct 2026: `nightmatch`, `clubroom`, `marqueeparty`, `marqueedinner`, `oktoberfest`, `cinema`, `watchparty` — hero is now 4 slides, the desktop slider 8.
 
-## Staff area — `kingsclubhouse.co.uk/staff`
+## Staff area — `kingsclubhouse.co.uk/staff` (CRM + club figures)
 
-Backend: **Supabase** (free tier). `staff/index.html` is a single-file admin (login · Enquiries · Sign-ups · Events · Calendar · Photos + placements) using the vendored `staff/supabase.js` (supabase-js 2.45.4). The public site reads live content from the same database and falls back to the baked-in content if `config.js` is empty or the database is unreachable.
+Backend: **Supabase** (free tier). `staff/index.html` is a single-file app using the vendored `staff/supabase.js` (supabase-js 2.45.4). The public site reads live content from the same database and falls back to the baked-in content if `config.js` is empty or the database is unreachable. A **Staff login** link sits at the bottom of the public page.
+
+**Tabs:** Dashboard · Inbox (owners) / Team queue (team) · Enquiries (list + drag-and-drop board) · Contacts · Sign-ups · Events · Calendar · Photos · Figures · Settings.
+
+- **Dashboard** — waiting for you, need a reply, open pipeline £, won this year £, win rate, enquiries this month; audience tiles (email sign-ups, WhatsApp members, Facebook, Instagram); charts for the last 12 months: enquiries per month (won / lost / declined / still open, number ↔ value £), **bar sales**, **paying members**, and the four audience figures as small multiples; needs-a-reply list; enquiries by event type.
+- **First refusal** — every new enquiry (website form or email to info@) is visible to owners only until an owner chooses *Reply myself*, *Send to team* (everyone is told) or *Not an enquiry*. Team members see the team queue and *Pick up* what they want; owners can also assign to one person. Enforced by row-level security, not just hidden.
+- **Pipeline** — New → Contacted → Quoted → Won / Lost / Declined, £ value, reason when lost, labels, a timeline of the form, notes, emails in and out, and stage changes. Reply from the enquiry with a template; sent from info@ when n8n is connected, otherwise it opens your own mail app and logs the reply.
+- **Figures** — one row per month: bar sales £, paying members, WhatsApp members, Facebook and Instagram followers (email sign-ups count themselves from the website). Each box saves itself; the dashboard reads from here.
 
 | File | What it is |
 |---|---|
 | `config.js` | Project URL + **publishable** key (public by design). Never a secret / service_role key. |
-| `supabase/schema.sql` | Tables, row-level security, storage bucket, seed data. Paste into the Supabase SQL editor once; safe to re-run. |
-| `supabase/n8n-alerts-workflow.json` | Import into n8n for the "new enquiry / sign-up" email (sends to info@kingsclubhouse.co.uk). |
+| `supabase/schema.sql` | Base tables, row-level security, storage bucket, seed data. Paste into the Supabase SQL editor once; safe to re-run. |
+| `supabase/2026-10-26-*.sql` | Calendar / spaces / new photos (already run). |
+| `supabase/2026-11-01-crm-and-figures.sql` | **CRM + figures**: `staff`, enquiry triage/pipeline columns, `enquiry_activity`, `notifications`, `crm_labels`, `crm_templates`, `crm_settings`, `email_outbox`, `club_metrics`, the `crm_*` functions and policies. Safe to re-run. The staff area shows a banner until this has been run. |
+| `supabase/n8n-alerts-workflow.json` | n8n: "new enquiry / sign-up" email alert to info@ (optional once the CRM is live — the app shows new enquiries in the Inbox and the bell). |
+| `supabase/n8n-crm-send.json` | n8n: sends replies written in the app from info@ (Gmail), in the original thread when there is one, and reports back with `crm_mark_sent` / `crm_mark_failed`. |
+| `supabase/n8n-crm-inbox.json` | n8n: every minute, files new emails in info@ on the right enquiry (`crm_ingest_email`) or opens a new one for the owners. |
 
 **Setting it up (once)**
 1. Supabase → New project (London, free). Project Settings → API Keys → copy the **Project URL** and the **publishable** key (`sb_publishable_…`) into `config.js`, push.
-2. SQL Editor → paste `supabase/schema.sql` → Run.
+2. SQL Editor → paste `supabase/schema.sql` → Run. Then paste `supabase/2026-11-01-crm-and-figures.sql` → Run. The first login created becomes the owner; to pick explicitly, run `select public.crm_set_owner('you@…');`.
 3. Authentication → Providers → Email: turn **off** "Allow new users to sign up" (only staff you add can log in). Authentication → URL configuration → Site URL `https://kingsclubhouse.co.uk`, add redirect `https://kingsclubhouse.co.uk/staff/`.
-4. Authentication → Users → **Add user** for each staff member (email + password). They can reset it from the login page.
-5. Email alerts: n8n → import `supabase/n8n-alerts-workflow.json`, set the Gmail credential and the venue address in the last node, activate, copy the **production** webhook URL. Supabase → Integrations → Database Webhooks → create one for `enquiries` (INSERT) and one for `signups` (INSERT) pointing at that URL.
+4. Authentication → Users → **Add user** for each staff member (email + password). They appear in Settings → Team as "Team"; owners can promote them. They can reset their password from the login page.
+5. Email in the app (optional): Database → Extensions → enable **pg_net**. n8n → import `supabase/n8n-crm-send.json` and `supabase/n8n-crm-inbox.json`; in each one's *Settings* code node paste the shared secret (staff area → Settings → Email) and the publishable key; pick the Gmail credential for info@; activate both. Copy the send workflow's **production** webhook URL into Settings → Email → *Send webhook URL*. Until this is done, replies open in your own mail app and are still logged.
 
 **How the pieces connect**
-- Visitors (anon key) can read events/photos/placements and insert one enquiry or sign-up — nothing else (row-level security in `schema.sql`).
-- Staff (any signed-in user) can do everything. Public sign-ups are disabled, so "signed in" means "staff".
+- Visitors (anon key) can read events/photos/placements and insert one enquiry or sign-up — nothing else.
+- Staff are the rows in `staff` (created automatically for every login). Owners see every enquiry; team see those sent to the team. The database refuses a team member changing who an enquiry is with, or attaching an email thread to it.
+- Replies written in the app go into `email_outbox`; a trigger hands them to the n8n webhook via `pg_net`; n8n sends from info@ and calls back. Incoming email is matched by Gmail thread, then by an open enquiry from the same address in the last 120 days, otherwise a new enquiry is opened for the owners.
 - Uploaded photos are resized to 1600px in the browser and stored in the public `photos` bucket; built-in photos stay in `photos/` in this repo.
 - Changing an event, placement or photo in the staff area is live on the site on the next page load — no deploy needed.
 
