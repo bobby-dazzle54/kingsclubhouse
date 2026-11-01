@@ -823,6 +823,160 @@
     .rooms.sp .room.whole li{color:var(--grey);}
     .rooms.sp .room.whole li b{color:var(--ink);}
   }
+
+/* =====================================================================
+   TIGHTENING PASS — 1 Nov 2026. Everything is scoped to so the
+   Before/After switch (bottom-left) can compare. Numbers match the plan.
+   ===================================================================== */
+
+/* 1 · Readability: body grey 3.9:1 → 5.8:1, eyebrow 3.0:1 → 4.5:1 (both now pass AA) */
+:root{--grey:#60654C;--eb:#B5583A;}
+.eyebrow{font-size:11.5px;letter-spacing:2.4px;color:var(--eb);margin-bottom:14px;}
+.vhero .eyebrow{color:#F4CDB9;text-shadow:0 1px 12px rgba(0,0,0,.55);}
+.how .eyebrow,.enqpitch .eyebrow{color:#F2B9A2;}
+.voverlay{background:linear-gradient(180deg,rgba(44,51,39,.62),rgba(44,51,39,.4) 45%,rgba(44,51,39,.82));}
+
+/* 2 · Type: headings were inheriting the body's 1.6 line-height (74px lines at 46px) */
+h2{line-height:1.08;letter-spacing:-0.012em;text-wrap:balance;margin:8px 0 12px;}
+.lead{max-width:64ch;margin-left:auto;margin-right:auto;line-height:1.55;}
+.sechead.left .lead{margin-left:0;}
+.sechead{margin-bottom:36px;}
+.vhero h1{letter-spacing:-0.015em;margin-bottom:16px;}
+.vhero .vlead{font-size:17px;max-width:54ch;}
+.vhero .vcta{margin-top:26px;}
+.vhero .vmail{margin-top:16px;}
+.vhero{height:calc(92svh - 72px);min-height:560px;}
+
+/* 3 · Header: menu centred with room to breathe; email becomes an icon; dead social links out of the header */
+nav{height:72px;gap:20px;}
+.menu{margin:0 auto;gap:30px;font-size:14.5px;padding:0 8px;}
+.menu a[href="#top"]{display:none;}
+.hmail{width:36px;height:36px;justify-content:center;border:1.5px solid var(--line);border-radius:50%;margin-right:10px;}
+.hmail span{display:none;}
+.hmail svg{width:16px;height:16px;}
+.hmail:hover{border-color:var(--sage);background:var(--mint);}
+.navright .socials{display:none;}
+.navright .btn{padding:12px 22px;}
+.mnav a.link[href="#top"]{display:none;}
+.mnav .socials{display:none;}
+
+/* 4 · Section rhythm: 84px bands + 46px head gaps → 72px + 36px; the 174px hole after the events deck closes */
+section{padding:72px 0;}
+.whatson{padding:72px 0 52px;}
+.deck-track{padding:8px 0 14px;}
+.welcome{padding:60px 0 56px;}
+.slider{height:440px;margin-top:34px;}
+.hl{margin-top:26px;}
+.trust{gap:10px 22px;padding:32px 0 0;font-size:13px;}
+.greviews{display:none;}
+#spaces{padding-top:60px;}
+
+/* 5 · Event cards: one real button; "More info" is a link, the whole card already opens the details */
+.ev .body{padding:18px 20px 18px;}
+.ev h3{font-size:22px;line-height:1.15;margin:6px 0 6px;}
+.ev p{margin-bottom:14px;}
+.ev .evbtns{align-items:center;gap:14px;}
+.ev .evbtns .btn.glassy{flex:0 0 auto;background:none;border:0;box-shadow:none;padding:11px 0;color:var(--sage2);text-decoration:underline;text-underline-offset:3px;}
+.ev .evbtns .btn.sage{flex:1;}
+
+/* 6 · Spaces cards: label / value rows read as a spec sheet */
+.sp .room h3{font-size:24px;line-height:1.1;}
+.sp .room li{padding:7px 0;font-size:11px;letter-spacing:.7px;text-transform:uppercase;font-weight:700;color:var(--grey);}
+.sp .room li b{font-size:14px;letter-spacing:0;text-transform:none;font-weight:600;line-height:1.35;}
+.sp .room p{font-size:14.5px;line-height:1.55;}
+.sp .room .body{padding:20px 22px 22px;}
+@media(min-width:761px){.rooms.sp .room.whole li{color:rgba(255,255,255,.72);}}
+
+/* 7 · Enquiry: tighter grid, optional details collapsed by default (JS) — card ~30% shorter */
+.enqsec{padding:88px 0;}
+.enq form{gap:12px 14px;}
+.enqsec .enq{padding:40px 40px 34px;}
+.enqsec .enq input,.enqsec .enq select,.enqsec .enq textarea{padding:12px 14px;font-size:14.5px;}
+.enq textarea{min-height:104px;}
+.enq label.lab,.enq legend{letter-spacing:1.2px;margin-bottom:6px;}
+.enq .check{margin-top:8px;font-size:13px;}
+.enqsec .enq .ffoot .btn{padding:17px 30px;font-size:15.5px;}
+.enqpitch h2{font-size:clamp(34px,4vw,50px);}
+.enqticks{margin:22px 0 24px;gap:9px;}
+
+/* 8 · What's on: day cells 112 → 76px so an empty month is not 700px of grid */
+.cd{min-height:76px;}
+.calwrap{padding:22px 22px 18px;}
+.calbar h3{font-size:28px;}
+.callist{margin-top:18px;}
+.calempty{padding:22px 20px;}
+
+/* 9 · Sign-up card */
+.community{padding:64px 0;}
+.comm{padding:44px 46px;gap:40px;}
+.comm h2{margin:8px 0 10px;}
+.comm>div:first-child p{margin-bottom:18px;}
+
+/* 10 · FAQ, Find us, footer */
+.faq summary{padding:14px 40px 14px 0;font-size:15px;}
+.faq details p{padding-bottom:16px;}
+.find .fbtns{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.find .fbtns .btn{text-align:center;}
+.find .fbtns .btn.sage{grid-column:1/-1;}
+footer{padding:28px 26px;}
+footer .flogo{width:150px;margin-bottom:12px;}
+footer p{margin:3px 0;}
+.galmore{display:none;}
+
+
+/* ---------- phones ---------- */
+@media(max-width:760px){
+  html{scroll-padding-top:80px;}
+  nav{height:66px;gap:0;}
+  .brand .logo{height:48px;}
+  .mnav{top:66px;}
+  /* hero: shorter, one line of eyebrow, and no third copy of the CTAs (the sticky bar waits until the hero has gone) */
+  .vhero{min-height:0;height:auto;padding:56px 0 60px;}
+  .vhero .eyebrow{font-size:10.5px;letter-spacing:2px;margin-bottom:12px;}
+  .vhero .eyebrow .eb2{display:none;}
+  .vhero h1{font-size:clamp(38px,11vw,50px);margin-bottom:14px;}
+  .vhero .vlead{font-size:15px;max-width:32ch;}
+  .vhero .vcta{margin-top:22px;gap:10px;}
+  .vcta .btn{padding:15px 28px;}
+  .vhero .vmail{margin-top:14px;font-size:13.5px;}
+  .ctabar{transform:translateY(110%);transition:transform .3s cubic-bezier(.2,.7,.2,1);}
+  .ctabar.show{transform:none;}
+  /* rhythm: 52px bands → 44px, head gaps 24 → 18, the deck→welcome hole 122px → 64px */
+  section{padding:44px 0;}
+  .whatson{padding:40px 0 32px;}
+  .deck-track{padding:8px 26px 12px;}
+  .welcome{padding:32px 0 28px;}
+  .sechead{margin-bottom:18px;}
+  h2{font-size:clamp(27px,7.4vw,33px);}
+  .lead{font-size:15px;}
+  .ev .evbtns .btn.glassy{padding:10px 0;font-size:12.5px;}
+  /* gallery: 7 tiles first, then "See all photos" (was 18 tiles ≈ 1,000px before any copy) */
+  .gallery{margin-top:18px;gap:6px;}
+  .gallery:not(.all) button:nth-child(n+8){display:none;}
+  .galmore{display:block;width:100%;margin-top:10px;padding:13px;border-radius:100px;border:1px solid var(--line);background:rgba(255,255,255,.7);font:inherit;font-weight:700;font-size:14px;color:var(--sage2);cursor:pointer;}
+  .gallery-hint{margin-top:6px;}
+  .hl{margin-top:18px;gap:8px;}
+  .trust{display:grid;grid-template-columns:1fr 1fr;gap:6px;padding:18px 0 0;}
+  .trust span{font-size:11.5px;line-height:1.3;padding:7px 10px;text-align:left;display:flex;align-items:center;}
+  .trust span:last-child{grid-column:1/-1;justify-content:center;}
+  #spaces{padding-top:44px;}
+  .rooms.sp{gap:8px;}
+  .sp .room li{padding:0;border:0;}
+  .sp .room .body{padding:11px 12px 12px;}
+  .sp .room h3{font-size:17px;}
+  .enqsec{padding:48px 0 54px;}
+  .enqsec .enq{padding:30px 18px 24px;}
+  .enqticks{margin:16px 0 18px;}
+  .calwrap{padding:12px 8px 10px;}
+  .cd{min-height:46px;}
+  .community{padding:12px 0 40px;}
+  .comm{padding:26px 20px;gap:22px;}
+  .faqwrap{gap:20px;}
+  footer{padding-bottom:calc(84px + env(safe-area-inset-bottom));}
+}
+footer .fstaff{margin-top:14px;font-size:12px;}
+footer .fstaff a{color:var(--grey);text-decoration:underline;text-underline-offset:3px;}
+footer .fstaff a:hover{color:var(--sage2);}
 </style>
 </head>
 <body>
@@ -871,7 +1025,7 @@
   </div>
   <div class="voverlay"></div>
   <div class="vinner">
-    <div class="eyebrow">Motspur Park · five minutes' walk from the station</div>
+    <div class="eyebrow">Motspur Park<span class="eb2"> · five minutes' walk from the station</span></div>
     <h1>Not just a venue,<br><em>a destination.</em></h1>
     <p class="vlead">A bar, balcony, outdoor kitchen and open grounds in Motspur Park — for kids' parties, birthdays, BBQs and community events.</p>
     <div class="vcta">
@@ -906,6 +1060,7 @@
   <!-- Mobile photo grid (replaces the slider on small screens): every venue photo, tap to enlarge -->
   <div class="gallery" id="gallery" data-reveal aria-label="Photos of the clubhouse and grounds"></div>
   <p class="gallery-hint">Tap any photo to enlarge</p>
+  <button class="galmore" id="galMore" type="button" aria-expanded="false" aria-controls="gallery">See all photos</button>
   <div class="slider" id="slider" data-reveal aria-roledescription="carousel" aria-label="Around the clubhouse">
     <div class="slides" id="slides">
       <div class="slide on"><img data-photo="clubroom" data-slot="slide1" alt="The clubhouse function room with round tables, sofas and the honours board" decoding="async"><div class="scap">Inside the clubhouse</div></div>
@@ -1100,8 +1255,8 @@
 
   <p class="femail"><a href="mailto:info@kingsclubhouse.co.uk">info@kingsclubhouse.co.uk</a></p>
   <p>© 2026 King's Clubhouse · KCS Old Boys RFC · Arthur Road, Motspur Park, New Malden KT3 6LX</p>
-  <p class="fclub">King's Clubhouse is the home of <a href="https://www.pitchero.com/clubs/kcsoldboysrfc/" rel="noopener">KCS Old Boys RFC</a>. Every booking helps fund the development of the club's grounds.</p>
-  <p>Events finish by 11pm.</p>
+  <p class="fclub">King's Clubhouse is the home of <a href="https://www.pitchero.com/clubs/kcsoldboysrfc/" rel="noopener">KCS Old Boys RFC</a>. Every booking helps fund the development of the club's grounds. Events finish by 11pm.</p>
+  <p class="fstaff"><a href="/staff/" rel="nofollow">Staff login</a></p>
 </footer>
 
 <div class="ctabar">
@@ -1298,8 +1453,11 @@
     }
     var tt=document.getElementById('totop');
     if(tt)tt.classList.toggle('show',y>900);
+    var bar=document.querySelector('.ctabar'),heroEl=document.getElementById('top');
+    if(bar&&heroEl)bar.classList.toggle('show',y>heroEl.offsetHeight-140);
     lastY=y;ticking=false;
   }
+  onScroll();
   window.addEventListener('scroll',function(){if(!ticking){requestAnimationFrame(onScroll);ticking=true;}},{passive:true});
 
   /* --- back to top --- */
@@ -1388,8 +1546,11 @@
   ];
   var gal=document.getElementById('gallery');
   function gUrl(g){return g.url||PHOTOS[g.p]||'';}
-  function renderGallery(){if(gal)gal.innerHTML=GALLERY.map(function(g,i){return '<button type="button" data-g="'+i+'" aria-label="Enlarge photo: '+esc(g.c)+'"><img src="'+esc(gUrl(g))+'" alt="'+esc(g.alt||g.c)+'" loading="'+(i<3?'eager':'lazy')+'" decoding="async"></button>';}).join('');}
+  var galMore=document.getElementById('galMore');
+  function galLabel(){if(galMore)galMore.textContent=gal&&gal.classList.contains('all')?'Show fewer photos':'See all '+GALLERY.length+' photos';}
+  function renderGallery(){if(gal)gal.innerHTML=GALLERY.map(function(g,i){return '<button type="button" data-g="'+i+'" aria-label="Enlarge photo: '+esc(g.c)+'"><img src="'+esc(gUrl(g))+'" alt="'+esc(g.alt||g.c)+'" loading="'+(i<3?'eager':'lazy')+'" decoding="async"></button>';}).join('');galLabel();}
   renderGallery();
+  if(galMore&&gal)galMore.addEventListener('click',function(){var o=gal.classList.toggle('all');galMore.setAttribute('aria-expanded',o?'true':'false');galLabel();if(!o)gal.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});});
   var lb=document.getElementById('lb'),lbImg=document.getElementById('lbImg'),lbCap=document.getElementById('lbCap'),lbN=document.getElementById('lbN'),lbI=0,lbLast=null;
   function lbShow(i){
     lbI=(i+GALLERY.length)%GALLERY.length;var g=GALLERY[lbI];
@@ -1463,7 +1624,7 @@
 
   /* --- enquiry form: optional details collapsed on phones --- */
   var enqMore=document.getElementById('enqMore');
-  if(enqMore)enqMore.open=!phone.matches;
+  if(enqMore)enqMore.open=false;
 
   /* --- pull live content (non-blocking; page is already usable with baked-in data) --- */
   if(DB){
