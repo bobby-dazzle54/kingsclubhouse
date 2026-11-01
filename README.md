@@ -27,15 +27,18 @@ Where things live in `index.html`:
 - What's on → `<section id="calendar">`; dates come from Supabase (`site_calendar`), edited in the staff area → Calendar.
 - FAQ, Find us → their sections, plain HTML.
 - Contact email: **info@kingsclubhouse.co.uk** (header, hero, enquiry panel, Find us, footer, mobile menu, 404).
+- Typography, header/menu and spacing rules from the 1 Nov 2026 tightening pass → the `<style id="tightcss">` block at the end of the page's CSS (overrides the rules above it; comments give before → after values). The header shows the email as an icon and hides the social icons until real handles exist (the footer keeps them).
+- Footer: a quiet **Staff login** link to `/staff/`.
 - Photo captions for the phone gallery → the `GALLERY` array in the script.
 
 ### Mobile behaviour (≤760px)
 - Hero fits one screen; the proof points scroll sideways as pills.
-- The photo slider is replaced by a tap-to-enlarge grid of all 18 photos (lightbox).
+- The photo slider is replaced by a tap-to-enlarge grid of photos: the first 7, then a "See all photos" button (lightbox on every photo).
 - Spaces show as photo tiles (Whole Venue full width); tapping one opens the full details in a bottom sheet with "Enquire about this space".
 - The calendar shows dots on days with events; tapping a day lists that day's events below.
 - Long copy is clamped with "Read more"; the enquiry form keeps essentials up front with optional fields behind "Add more details"; FAQ shows 7 then "Show all 19 questions".
-- The Google-reviews placeholder is hidden on phones until live reviews are connected.
+- The Google-reviews placeholder (`.greviews`) is hidden on every size until live reviews are connected.
+- The sticky Enquire / Sign-up bar appears once the hero has scrolled past (the hero has the same two buttons).
 
 ### Photo notes
 No dedicated shot exists yet for the **Outdoor Kitchen & Braai** (currently the summer-evening-outside shot). Swap `data-photo` on those cards when real ones are taken; add new photos to `photos/` and the `PHOTOS` map at the top of the body.
